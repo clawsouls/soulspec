@@ -4,7 +4,7 @@
 
 Latest version: **v0.5** ([soul-spec-v0.5.md](./soul-spec-v0.5.md))
 
-Website: [soulspec.org](https://soulspec.org) · Registry: [clawsouls.ai](https://clawsouls.ai)
+Website: [soulspec.org](https://soulspec.org) · Registry: [clawsouls.ai](https://clawsouls.ai) · 📚 [Full Documentation](https://docs.clawsouls.ai)
 
 ## Version History
 
