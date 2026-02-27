@@ -8,7 +8,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://clawsouls.github.io',
-  baseUrl: '/soulspec/',
+  baseUrl: '/',
 
   organizationName: 'clawsouls',
   projectName: 'soulspec',
