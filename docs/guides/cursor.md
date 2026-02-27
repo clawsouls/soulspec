@@ -29,17 +29,17 @@ clawsouls install TomLeeLive/brad
 **Option A — Single `.cursorrules` file:**
 
 ```bash
-clawsouls export cursorrules --dir ~/.clawsouls/souls/TomLeeLive/brad -o ./my-project/.cursorrules
+clawsouls export cursorrules --dir ~/.openclaw/souls/TomLeeLive/brad -o ./my-project/.cursorrules
 ```
 
 **Option B — `.cursor/rules/` directory (recommended):**
 
 ```bash
 mkdir -p ./my-project/.cursor/rules/
-cp ~/.clawsouls/souls/TomLeeLive/brad/SOUL.md ./my-project/.cursor/rules/
-cp ~/.clawsouls/souls/TomLeeLive/brad/IDENTITY.md ./my-project/.cursor/rules/
-cp ~/.clawsouls/souls/TomLeeLive/brad/STYLE.md ./my-project/.cursor/rules/
-cp ~/.clawsouls/souls/TomLeeLive/brad/AGENTS.md ./my-project/.cursor/rules/
+cp ~/.openclaw/souls/TomLeeLive/brad/SOUL.md ./my-project/.cursor/rules/
+cp ~/.openclaw/souls/TomLeeLive/brad/IDENTITY.md ./my-project/.cursor/rules/
+cp ~/.openclaw/souls/TomLeeLive/brad/STYLE.md ./my-project/.cursor/rules/
+cp ~/.openclaw/souls/TomLeeLive/brad/AGENTS.md ./my-project/.cursor/rules/
 ```
 
 ### Step 4: Open in Cursor

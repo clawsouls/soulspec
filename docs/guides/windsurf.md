@@ -27,7 +27,7 @@ clawsouls install TomLeeLive/brad
 ### Step 3: Export to Windsurf format
 
 ```bash
-clawsouls export windsurfrules --dir ~/.clawsouls/souls/TomLeeLive/brad -o ./my-project/.windsurfrules
+clawsouls export windsurfrules --dir ~/.openclaw/souls/TomLeeLive/brad -o ./my-project/.windsurfrules
 ```
 
 ### Step 4: Open in Windsurf

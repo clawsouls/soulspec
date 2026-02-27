@@ -79,7 +79,7 @@ What the agent does during idle/periodic check-ins. Common for always-on agents.
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
-| [v0.5](/docs/spec/v0.5) | 2026-02-23 | Robotics/embodied agents, sensors, allowedTools, hardware-aware personas |
+| [v0.5](/docs/spec/v0.5) | 2026-02-24 | Robotics/embodied agents, sensors, actuators, hardware-aware personas |
 | [v0.4](/docs/spec/v0.4) | 2026-02-20 | Multi-framework compatibility, recommendedSkills, progressive disclosure |
 | [v0.3](/docs/spec/v0.3) | 2026-02-16 | specVersion field, soul.json rename, license allowlist |
 
@@ -89,7 +89,7 @@ What the agent does during idle/periodic check-ins. Common for always-on agents.
 
 Souls published to the registry must use one of these SPDX identifiers:
 
-`MIT`, `Apache-2.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `CC0-1.0`, `ISC`, `BSD-2-Clause`, `BSD-3-Clause`, `Unlicense`
+`MIT`, `Apache-2.0`, `CC-BY-4.0`, `CC0-1.0`, `ISC`, `BSD-2-Clause`, `BSD-3-Clause`, `Unlicense`
 
 ## Next Steps
 

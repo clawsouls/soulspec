@@ -10,13 +10,13 @@ OpenClaw supports SOUL.md-based persona configuration natively. Soul Spec extend
 
 ## Quick Start
 
-### 1. Install the CLI
+### 1. Create a Soul Package
 
 ```bash
-npx clawsouls init
+npx clawsouls init my-soul
 ```
 
-This generates a Soul Spec template in your current directory:
+This scaffolds a Soul Spec template directory:
 
 ```
 ├── soul.json      # Metadata

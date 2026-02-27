@@ -13,7 +13,7 @@ Soul Spec gives Claude Code an identity. Install a soul, export it to `CLAUDE.md
 ## Prerequisites
 
 - Claude Code CLI installed
-- Node.js 18+
+- Node.js 22+
 
 ## Quick Start (2 minutes)
 

@@ -23,7 +23,7 @@ AI agents accumulate knowledge over time — conversation logs, preferences, pro
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - A [GitHub Personal Access Token](https://github.com/settings/tokens) with `repo` scope
 
 ## Quick Start
