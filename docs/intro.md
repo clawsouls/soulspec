@@ -63,7 +63,14 @@ npx clawsouls publish ./my-agent
 
 ## Latest Version
 
-The current spec version is **v0.5**, which adds support for robotics and embodied agents with sensor/actuator schemas. See the [Spec Overview](/docs/spec/overview) for details.
+The current spec version is **v0.5.2**, which introduces the **Dual Declaration Requirement** — safety laws must be declared in both `soul.json` (machine-readable) and `SOUL.md` (LLM-readable) for embodied agents.
+
+v0.5 supports three environment types:
+- **Virtual** — Text/chat-based agents (default)
+- **Embodied** — Physical robots, kiosks, IoT devices
+- **Hybrid** — Agents operating in both virtual and physical contexts
+
+See the [Spec Overview](/docs/spec/overview) for details.
 
 ## Next Steps
 

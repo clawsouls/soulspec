@@ -30,22 +30,51 @@ The CLI auto-detects your installed platform (OpenClaw, ZeroClaw, Clawdbot, etc.
 ## Option 2: Create Your Own
 
 ```bash
-# Scaffold a new soul
+# Text agent (default)
+clawsouls init my-agent
+
+# Robot agent
+clawsouls init my-robot --env embodied
+
+# Hybrid agent
+clawsouls init my-hybrid --env hybrid
+```
+
+### Virtual Agent Scaffold (default)
+
+```bash
 clawsouls init my-agent
 cd my-agent
 ```
 
-This creates:
-
 ```
 my-agent/
-├── soul.json       # Metadata
+├── soul.json       # Metadata (specVersion: "0.5")
 ├── SOUL.md         # Personality & tone
 ├── IDENTITY.md     # Name, role, traits
 ├── AGENTS.md       # Workflow rules
 ├── HEARTBEAT.md    # Periodic behavior
 └── README.md       # Description
 ```
+
+### Embodied Agent Scaffold
+
+```bash
+clawsouls init my-robot --env embodied
+cd my-robot
+```
+
+```
+my-robot/
+├── soul.json       # Metadata with environment, safety.laws, hardwareConstraints
+├── SOUL.md         # Personality & safety behavioral rules
+├── IDENTITY.md     # Name, role, physical traits
+├── AGENTS.md       # Workflow rules
+├── HEARTBEAT.md    # Periodic behavior
+└── README.md       # Description
+```
+
+The embodied scaffold includes `safety.laws` (hierarchical safety rules), `hardwareConstraints`, and `safety.physical` in `soul.json`. Per the **Dual Declaration Requirement** (v0.5.2), safety laws are also pre-populated in `SOUL.md` as behavioral rules.
 
 Edit the files to define your agent's personality, then:
 
