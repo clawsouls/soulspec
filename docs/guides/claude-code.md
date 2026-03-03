@@ -23,10 +23,19 @@ Soul Spec gives Claude Code an identity. Install a soul, export it to `CLAUDE.md
 npm install -g clawsouls
 ```
 
-### Step 2: Install a soul
+### Step 2: Install and activate in one command
+
+```bash
+clawsouls install TomLeeLive/brad --use claude-code
+```
+
+This downloads the soul **and** applies it to your workspace in a single step.
+
+Or install and activate separately:
 
 ```bash
 clawsouls install TomLeeLive/brad
+clawsouls use TomLeeLive/brad
 ```
 
 Or create your own:
@@ -35,7 +44,7 @@ Or create your own:
 clawsouls init my-agent
 ```
 
-### Step 3: Export to CLAUDE.md
+### Step 3: Export to CLAUDE.md (optional)
 
 ```bash
 clawsouls export claude-md --dir ./my-agent -o ./my-project/CLAUDE.md

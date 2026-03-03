@@ -52,10 +52,11 @@ clawsouls init my-robot --spec 0.5   # Robotics/embodied agents
 
 ### `clawsouls install <owner/name[@version]>`
 
-Download a soul from the registry.
+Download a soul from the registry. Use `--use` to install and activate in one step.
 
 ```bash
 clawsouls install clawsouls/surgical-coder
+clawsouls install clawsouls/surgical-coder --use claude-code  # install + activate
 clawsouls install clawsouls/surgical-coder@0.1.0   # specific version
 clawsouls install clawsouls/surgical-coder --force  # overwrite
 ```
