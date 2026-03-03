@@ -17,7 +17,7 @@ Browse souls at [clawsouls.ai/souls](https://clawsouls.ai/souls), then:
 npm install -g clawsouls
 
 # Install a soul from the registry
-clawsouls install clawsouls/surgical-coder
+clawsouls install clawsouls/surgical-coder --use claude-code
 
 # Activate it (auto-detects your platform)
 clawsouls use surgical-coder

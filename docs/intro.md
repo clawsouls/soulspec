@@ -47,7 +47,7 @@ One persona definition, multiple frameworks. Install a soul, export it to your t
 
 ```bash
 # Install a soul from the registry
-npx clawsouls install clawsouls/surgical-coder
+npx clawsouls install clawsouls/surgical-coder --use claude-code
 
 # Activate it in your agent
 npx clawsouls use surgical-coder

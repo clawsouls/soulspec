@@ -21,7 +21,7 @@ npm install -g clawsouls
 ### Step 2: Install a soul
 
 ```bash
-clawsouls install TomLeeLive/brad
+clawsouls install TomLeeLive/brad --use cursor
 ```
 
 ### Step 3: Export to Cursor format
