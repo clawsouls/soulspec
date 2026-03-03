@@ -16,16 +16,13 @@ Browse souls at [clawsouls.ai/souls](https://clawsouls.ai/souls), then:
 # Install the CLI
 npm install -g clawsouls
 
-# Install a soul from the registry
+# Install and activate in one command
 clawsouls install clawsouls/surgical-coder --use claude-code
 
-# Activate it (auto-detects your platform)
-clawsouls use surgical-coder
-
-# Restart your agent session — done!
+# That's it! Restart your editor.
 ```
 
-The CLI auto-detects your installed platform (OpenClaw, ZeroClaw, Clawdbot, etc.) and copies soul files to the right workspace.
+The `--use` flag writes directly to your project directory — no OpenClaw required. Supported platforms: `claude-code`, `cursor`, `windsurf`, `openclaw`.
 
 ## Option 2: Create Your Own
 

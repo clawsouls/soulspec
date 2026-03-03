@@ -61,9 +61,20 @@ clawsouls install clawsouls/surgical-coder@0.1.0   # specific version
 clawsouls install clawsouls/surgical-coder --force  # overwrite
 ```
 
+### `clawsouls install --use <platform>`
+
+Install and activate in one command. Writes directly to your project directory — no OpenClaw required.
+
+```bash
+clawsouls install clawsouls/surgical-coder --use claude-code   # writes CLAUDE.md
+clawsouls install clawsouls/surgical-coder --use cursor        # writes .cursor/rules/
+clawsouls install clawsouls/surgical-coder --use windsurf      # writes .windsurfrules
+clawsouls install clawsouls/surgical-coder --use openclaw      # copies to ~/.openclaw/workspace/
+```
+
 ### `clawsouls use <name>`
 
-Activate an installed soul. Current workspace is automatically backed up.
+Activate an installed soul. If OpenClaw is not detected, you'll be prompted to choose a target platform.
 
 ```bash
 clawsouls use surgical-coder

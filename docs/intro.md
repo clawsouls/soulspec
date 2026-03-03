@@ -46,11 +46,8 @@ One persona definition, multiple frameworks. Install a soul, export it to your t
 ## Quick Example
 
 ```bash
-# Install a soul from the registry
+# Install and activate in one command (works without OpenClaw)
 npx clawsouls install clawsouls/surgical-coder --use claude-code
-
-# Activate it in your agent
-npx clawsouls use surgical-coder
 ```
 
 Or create your own:
