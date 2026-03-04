@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
         'spec/v0.4',
         'spec/v0.3',
         'spec/migration',
+        'spec/examples',
       ],
     },
     {
