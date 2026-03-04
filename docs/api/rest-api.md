@@ -300,11 +300,13 @@ Returns a pre-built bundle for quick installation.
 ### Get Current User
 
 ```http
-GET /api/v1/me
+GET /api/v1/auth/me
 Authorization: Bearer cs_xxxxx
 ```
 
-Returns the authenticated user's profile.
+Returns the authenticated user's profile. Supports session cookie, PAT (`cs_` prefix), or legacy Bearer token.
+
+> **Legacy alias:** `GET /api/v1/me` still works but is deprecated. Use `/api/v1/auth/me` as the canonical endpoint.
 
 **Response:**
 
@@ -315,6 +317,74 @@ Returns the authenticated user's profile.
   "hasStripeCustomer": false
 }
 ```
+
+---
+
+### Reviews
+
+#### List Reviews
+
+```http
+GET /api/v1/souls/{owner}/{name}/reviews
+```
+
+Returns reviews for a soul, with nested replies.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `limit` | number | Results per page (default: 20, max: 100) |
+| `offset` | number | Offset for pagination |
+
+#### Create Review
+
+```http
+POST /api/v1/souls/{owner}/{name}/reviews
+Authorization: Bearer cs_xxxxx
+Content-Type: application/json
+```
+
+```json
+{
+  "rating": 5,
+  "body": "Great persona, highly recommended!"
+}
+```
+
+#### Update Review
+
+```http
+PUT /api/v1/souls/{owner}/{name}/reviews/{reviewId}
+Authorization: Bearer cs_xxxxx
+```
+
+#### Delete Review
+
+```http
+DELETE /api/v1/souls/{owner}/{name}/reviews/{reviewId}
+Authorization: Bearer cs_xxxxx
+```
+
+#### Like Review
+
+```http
+POST /api/v1/souls/{owner}/{name}/reviews/{reviewId}/like
+Authorization: Bearer cs_xxxxx
+```
+
+---
+
+### Diff
+
+```http
+GET /api/v1/souls/{owner}/{name}/diff?v1={version1}&v2={version2}
+```
+
+Returns a file-by-file diff between two published versions of a soul.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `v1` | string | First version (required) |
+| `v2` | string | Second version (required) |
 
 ---
 
