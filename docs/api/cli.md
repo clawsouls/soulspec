@@ -153,6 +153,101 @@ clawsouls sync export-key   # Export encryption key
 clawsouls sync import-key   # Import key on new device
 ```
 
+### `clawsouls login <token>`
+
+Save API token for registry authentication.
+
+```bash
+clawsouls login cs_xxxxx
+clawsouls login --github ghp_xxxxx   # GitHub PAT for memory sync
+```
+
+### `clawsouls logout`
+
+Remove saved API token.
+
+```bash
+clawsouls logout
+```
+
+### `clawsouls whoami`
+
+Show the currently authenticated user.
+
+```bash
+clawsouls whoami
+```
+
+### `clawsouls version bump <type>`
+
+Bump the soul version in `soul.json`.
+
+```bash
+clawsouls version bump patch
+clawsouls version bump minor -m "Added new personality traits"
+clawsouls version bump major --dir ./my-soul
+```
+
+### `clawsouls diff <soul> <v1> <v2>`
+
+Show diff between two published versions of a soul.
+
+```bash
+clawsouls diff clawsouls/brad 1.2.0 1.3.0
+```
+
+### `clawsouls test`
+
+Run soul tests — schema validation, security scan, and behavioral tests.
+
+```bash
+clawsouls test                     # all levels
+clawsouls test --level 1           # schema only
+clawsouls test --dir ./my-soul     # specific directory
+clawsouls test --json              # JSON output
+```
+
+### `clawsouls doctor`
+
+Check environment and configuration health.
+
+```bash
+clawsouls doctor
+```
+
+### `clawsouls migrate`
+
+Migrate `soul.json` to a newer spec version.
+
+```bash
+clawsouls migrate --to 0.5
+clawsouls migrate --to 0.4 --dir ./my-soul
+```
+
+### `clawsouls search <query>`
+
+Search for souls in the registry.
+
+```bash
+clawsouls search "devops engineer"
+```
+
+### `clawsouls info <owner/name>`
+
+Show detailed information about a published soul.
+
+```bash
+clawsouls info clawsouls/surgical-coder
+```
+
+### `clawsouls update`
+
+Check for updates on installed souls.
+
+```bash
+clawsouls update
+```
+
 ## Platform Override
 
 ```bash
