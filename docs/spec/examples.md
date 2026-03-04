@@ -108,7 +108,7 @@ A v0.5 reference soul demonstrating the full spec including safety laws.
 | `HEARTBEAT.md` | Security monitoring routine |
 | `README.md` | Documentation for users |
 
-📦 *Coming soon* — will be published after review.
+📦 [View on ClawSouls →](https://clawsouls.ai/en/souls/clawsouls/sentinel)
 
 ```json title="soul.json"
 {
@@ -116,16 +116,16 @@ A v0.5 reference soul demonstrating the full spec including safety laws.
   "name": "sentinel",
   "displayName": "Sentinel",
   "version": "1.0.0",
-  "description": "AI security monitor with Asimov-inspired safety laws",
+  "description": "Security monitoring AI — watches, analyzes, and alerts on infrastructure anomalies",
   "author": {
-    "name": "clawsouls",
-    "github": "clawsouls"
+    "name": "Tom Lee",
+    "github": "TomLeeLive"
   },
-  "category": "work/security",
+  "category": "operations",
   "license": "Apache-2.0",
-  "tags": ["security", "monitoring", "safety", "asimov"],
+  "tags": ["security", "monitoring", "devops", "infrastructure"],
   "compatibility": {
-    "frameworks": ["openclaw", "claude-code", "cursor"]
+    "frameworks": ["openclaw"]
   },
   "files": {
     "soul": "SOUL.md",
