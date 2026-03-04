@@ -167,16 +167,14 @@ A v0.5 reference soul demonstrating the full spec including safety laws.
 | `specVersion` | ✅ | ✅ | ✅ |
 | `author` | optional | **required** | **required** |
 | `tags` | optional | **required** | **required** |
-| `## Personality` in SOUL.md | optional | **recommended**¹ | **recommended**¹ |
-| `## Tone` in SOUL.md | optional | **recommended**¹ | **recommended**¹ |
-| `## Principles` in SOUL.md | optional | **recommended**¹ | **recommended**¹ |
-| `Creature` in IDENTITY.md | optional | **recommended**¹ | **recommended**¹ |
-| AGENTS.md | recommended | recommended | **recommended**¹ |
-| `safety.laws` | — | — | supported |
+| `## Personality` in SOUL.md | optional | **required** | **required** |
+| `## Tone` in SOUL.md | optional | **required** | **required** |
+| `## Principles` in SOUL.md | optional | **required** | **required** |
+| `Creature` in IDENTITY.md | optional | **required** | **required** |
+| AGENTS.md | recommended | recommended | **required** |
+| `safety.laws` | — | — | recommended |
 | `compatibility` | — | — | supported |
 | `allowedTools` | — | — | supported |
-
-¹ *These will become required in a future CLI update.*
 
 :::tip Upgrading?
 See the [Migration Guide](./migration) for step-by-step instructions.
