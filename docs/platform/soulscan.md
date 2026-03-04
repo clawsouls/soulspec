@@ -6,7 +6,7 @@ description: Security verification for AI agent personas.
 
 # SoulScan
 
-SoulScan is the security engine that verifies soul packages. It checks for prompt injection, data exfiltration, harmful content, and 50+ other patterns.
+SoulScan is the security engine that verifies soul packages. It checks for prompt injection, data exfiltration, harmful content, and 55+ other patterns.
 
 ## How It Works
 
@@ -48,12 +48,19 @@ npx clawsouls soulscan --init
 
 SoulScan outputs a score from 0–100:
 
-| Score | Status | Description |
-|-------|--------|-------------|
-| 90–100 | ✅ Excellent | No issues found |
-| 70–89 | ⚠️ Good | Minor warnings |
-| 50–69 | 🟡 Fair | Issues should be addressed |
-| 0–49 | ❌ Fail | Critical issues, cannot publish |
+```
+Score = 100 - (errors × 25) - (warnings × 5)
+```
+
+For embodied agents (`environment: "embodied"`), a quality bonus of up to **+10 points** is applied for well-defined hardware constraints, safety declarations, and other embodied-specific fields.
+
+| Score | Grade | Description |
+|-------|-------|-------------|
+| 90–100 | ✅ Verified | No issues found |
+| 70–89 | ⚠️ Low Risk | Minor warnings |
+| 40–69 | 🟡 Medium Risk | Issues should be addressed |
+| 1–39 | 🟠 High Risk | Significant issues, review required |
+| 0 | ❌ Blocked | Critical issues, cannot publish |
 
 ## Example Output
 
@@ -67,8 +74,22 @@ Score: 95/100
 ✅ Schema valid
 ⚠️ STYLE.md missing (optional but recommended)
 
-53 patterns checked · 0 critical · 1 warning
+58 patterns checked · 0 critical · 1 warning
 ```
+
+## Package Limits
+
+### File Size
+- **Per file**: 100KB maximum
+- **Per package**: 1MB maximum (total of all files)
+
+### Allowed File Extensions
+
+Only the following file extensions are permitted in a soul package:
+
+`.md`, `.json`, `.png`, `.jpg`, `.jpeg`, `.svg`, `.txt`, `.yaml`, `.yml`
+
+Files with other extensions will be flagged by SoulScan.
 
 ## CI Integration
 
