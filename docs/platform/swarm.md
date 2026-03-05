@@ -212,6 +212,37 @@ npx clawsouls swarm merge --strategy llm --model qwen3:8b
 npx clawsouls swarm merge --strategy llm --ollama-url http://192.168.1.10:11434
 ```
 
+### Setup
+
+Requires [Ollama](https://ollama.ai) running locally:
+
+```bash
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull a model
+ollama pull gemma3:4b
+
+# Start Ollama
+ollama serve
+```
+
+### Usage
+
+```bash
+# LLM merge with auto-detected model
+npx clawsouls swarm merge --strategy llm
+
+# Specify model
+npx clawsouls swarm merge --strategy llm --model qwen3:8b
+
+# Custom Ollama URL
+npx clawsouls swarm merge --strategy llm --ollama-url http://192.168.1.10:11434
+
+# Merge specific agent only
+npx clawsouls swarm merge --strategy llm --agent brad
+```
+
 ### How It Works
 
 1. Git attempts a normal merge
