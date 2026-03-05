@@ -132,7 +132,7 @@ npx clawsouls swarm merge [--strategy auto|manual|llm] [--agent <id>]
 **Strategies:**
 - `auto` (default): Git merge + persona-aware conflict resolution
 - `manual`: Skip conflicts, list them for manual resolution
-- `llm`: *(future)* LLM-powered semantic conflict resolution
+- `llm`: LLM-powered semantic conflict resolution via Ollama
 
 ### `swarm diff`
 
@@ -181,6 +181,63 @@ When `memory: "union"` is set (default), memory file conflicts are resolved by:
 4. Deduplicating by header text
 
 This ensures no agent loses their learned experiences.
+
+## LLM Semantic Merge
+
+When `--strategy llm` is used, conflicting files are resolved by a local LLM via [Ollama](https://ollama.ai). The LLM reads both versions alongside the agent's personality from `soul.json` and produces a merged result that preserves the agent's identity.
+
+### Setup
+
+```bash
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull a model
+ollama pull gemma3:4b
+
+# Start Ollama
+ollama serve
+```
+
+### Usage
+
+```bash
+# LLM merge with auto-detected model
+npx clawsouls swarm merge --strategy llm
+
+# Specify model
+npx clawsouls swarm merge --strategy llm --model qwen3:8b
+
+# Remote Ollama server
+npx clawsouls swarm merge --strategy llm --ollama-url http://192.168.1.10:11434
+```
+
+### How It Works
+
+1. Git attempts a normal merge
+2. For each conflicting file, both versions are extracted
+3. The LLM receives: `soul.json` personality context + version A (main) + version B (agent)
+4. LLM produces a merged result that aligns with the agent's identity
+5. LLM explains its merge decision (logged to console)
+6. If the LLM fails or times out, the file is marked as unresolvable
+
+### Example Output
+
+```
+🐝 Merging with strategy: llm
+
+  ✅ agent/brad-laptop: merged (2 conflict(s) resolved by LLM)
+     SOUL.md: Kept formal tone from main, added new principles from agent. (12.3s via gemma3:4b)
+     MEMORY.md: Combined both memory sections, deduped project notes. (8.7s via gemma3:4b)
+```
+
+### Key Points
+
+- **Cost: $0** — runs entirely on your local machine
+- **Privacy: 100%** — no data leaves your machine
+- **Offline: yes** — works without internet after model download
+- **Personality-aware** — the LLM uses `soul.json` to make identity-consistent decisions
+- Falls back gracefully if Ollama is unavailable
 
 ## Use Cases
 
