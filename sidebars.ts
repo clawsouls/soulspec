@@ -51,6 +51,8 @@ const sidebars: SidebarsConfig = {
       items: [
         'platform/publishing',
         'platform/soulscan',
+        'platform/checkpoint',
+        'platform/swarm',
         'platform/web-editor',
       ],
     },

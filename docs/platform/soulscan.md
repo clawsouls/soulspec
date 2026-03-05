@@ -14,88 +14,136 @@ Every soul published to [clawsouls.ai](https://clawsouls.ai) is automatically sc
 
 ```bash
 # Scan a soul package
+npx clawsouls scan ./my-soul
+
+# Quick mode (single-line output for CI)
+npx clawsouls scan . -q
+
+# JSON output
+npx clawsouls scan . --json
+
+# Full integrity scan (server + checksum verification)
 npx clawsouls soulscan ./my-soul
-
-# Scan your active workspace
-npx clawsouls soulscan
-
-# Initialize baseline checksums
-npx clawsouls soulscan --init
 ```
 
 ## What It Checks
 
-### Security (Critical)
+### Stage 1: Schema Validation
+- `soul.json` structure and required fields
+- `specVersion` compatibility check
+- Embodied agent field validation (v0.5+)
+
+### Stage 2: File Structure
+- Allowed file extensions only
+- Per-file and total package size limits
+- Recommended files (SOUL.md, IDENTITY.md)
+
+### Stage 2.5: Manifest Security
+- Embodied agents without safety laws
+- Cross-reference: safety laws vs persona contradictions
+
+### Stage 3: Pattern-Based Security
 - Prompt injection attempts
 - System prompt override patterns
 - Data exfiltration instructions
 - Secret/credential leaks
 - Unauthorized tool usage directives
 
-### Quality (Warning)
-- Missing required files
-- Schema validation errors
-- Inconsistent personality across files
-- Overly long descriptions
-- Model compatibility hints
+### Stage 3.5: Memory Hygiene
+- **Context-aware PII detection** — distinguishes real secrets from placeholders
+- Email, phone, SSN, IP, filesystem paths, API keys, passwords, DB connection strings
+- False positive filtering: code blocks, example prefixes, well-known IPs (127.0.0.1, 8.8.8.8)
+- **File-type differentiation**: critical PII in non-memory files escalated to error severity
 
-### Integrity
-- File checksum verification (with `--init`)
-- Unexpected file modifications
-- Tamper detection
+### Stage 4: Content Quality
+- SOUL.md length check
+- Description quality
 
-## Score
+### Stage 5: Persona Consistency
+- Name consistency across IDENTITY.md and soul.json
+- Tone contradiction detection (formal vs casual)
+- Persona reference validation
 
-SoulScan outputs a score from 0–100:
+## Integrated Scoring
+
+SoulScan v1.4.0 uses a weighted scoring formula when memory files are present:
 
 ```
-Score = 100 - (errors × 25) - (warnings × 5)
+integratedScore = personaScore × 0.6 + memoryScore × 0.4
 ```
 
-For embodied agents (`environment: "embodied"`), a quality bonus of up to **+10 points** is applied for well-defined hardware constraints, safety declarations, and other embodied-specific fields.
+- **Persona score**: based on schema, security, quality, consistency issues (stages 1–5 excluding memory)
+- **Memory score**: based on PII/hygiene issues in memory files only
+- When no memory files exist, the persona score is used directly
+
+### Score Penalties
+
+| Issue Type | Penalty |
+|-----------|---------|
+| Error | -25 points |
+| Warning | -5 points |
+
+### Embodied Agent Bonus
+
+For souls with `environment: "embodied"`, up to **+10 bonus points** for:
+- `environment` field (+2)
+- `interactionMode` field (+2)
+- `hardwareConstraints` (+3)
+- `safety.physical` (+3)
+
+### Score Grades
 
 | Score | Grade | Description |
 |-------|-------|-------------|
-| 90–100 | ✅ Verified | No issues found |
+| 90–100 | ✅ Verified | No significant issues |
 | 70–89 | ⚠️ Low Risk | Minor warnings |
 | 40–69 | 🟡 Medium Risk | Issues should be addressed |
-| 1–39 | 🟠 High Risk | Significant issues, review required |
+| 1–39 | 🟠 High Risk | Significant issues |
 | 0 | ❌ Blocked | Critical issues, cannot publish |
+
+## Context-Aware Detection
+
+SoulScan reduces false positives by checking context around each match:
+
+- **Code blocks**: patterns inside `` ``` `` fenced blocks are skipped
+- **Example indicators**: lines with "example", "e.g.", "placeholder", "sample", "test" skip matches
+- **Placeholder patterns**: `user@example.com`, `sk-test...`, `password: <your_password>` are filtered
+- **Well-known IPs**: `127.0.0.1`, `0.0.0.0`, `8.8.8.8`, `1.1.1.1`, etc. are not flagged
 
 ## Example Output
 
 ```
-🔒 SoulScan Results — my-soul
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Score: 95/100
+🔍 SoulScan Local — v1.4.0 (rules 1.4.0)
+   Scanning /path/to/my-soul
 
-✅ No prompt injection patterns
-✅ No secret leaks
-✅ Schema valid
-⚠️ STYLE.md missing (optional but recommended)
+   Found 5 files
 
-58 patterns checked · 0 critical · 1 warning
+⚠️  [MEM001] Email address found in memory file (memory/log.md, 1 occurrence)
+⚠️  [MEM004] IP address found in memory file (memory/log.md, 1 occurrence)
+✅ 4 checks passed
+🧠 Memory Hygiene: 90/100
+
+🔍 Score: 96/100 — Verified
+   0 errors, 2 warnings, 4 passed
+   Scanned in 3ms
 ```
 
 ## Package Limits
 
 ### File Size
 - **Per file**: 100KB maximum
-- **Per package**: 1MB maximum (total of all files)
+- **Per package**: 1MB maximum
 
 ### Allowed File Extensions
 
-Only the following file extensions are permitted in a soul package:
-
 `.md`, `.json`, `.png`, `.jpg`, `.jpeg`, `.svg`, `.txt`, `.yaml`, `.yml`
-
-Files with other extensions will be flagged by SoulScan.
 
 ## CI Integration
 
-Add SoulScan to your CI pipeline:
-
 ```bash
-npx clawsouls soulscan ./my-soul -q
-# Exit code 0 = pass, 1 = fail
+# Quick check — exit 0 = pass, exit 1 = fail
+npx clawsouls scan ./my-soul -q
+
+# JSON for programmatic use
+npx clawsouls scan ./my-soul --json
 ```
