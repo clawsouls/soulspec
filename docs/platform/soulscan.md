@@ -138,6 +138,76 @@ SoulScan reduces false positives by checking context around each match:
 
 `.md`, `.json`, `.png`, `.jpg`, `.jpeg`, `.svg`, `.txt`, `.yaml`, `.yml`
 
+## LLM Semantic Analysis (Stage 6)
+
+Beyond regex patterns, SoulScan can use a **local LLM** to detect semantic issues that rules can't catch:
+
+- Contradictions between personality and instructions
+- Implicit jailbreak attempts disguised as harmless text
+- PII that's obfuscated or encoded
+- Cross-file inconsistencies (SOUL.md says one thing, AGENTS.md says another)
+
+### Setup
+
+Requires [Ollama](https://ollama.ai) running locally (free, offline, private):
+
+```bash
+# Install Ollama (macOS/Linux)
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Pull a model (any works — smaller = faster)
+ollama pull gemma3:4b    # ~3GB, fast
+ollama pull qwen3:8b     # ~5GB, more accurate
+
+# Start Ollama
+ollama serve
+```
+
+### Usage
+
+```bash
+# Semantic scan with auto-detected model
+npx clawsouls scan . --semantic
+
+# Specify a model
+npx clawsouls scan . --semantic --model gemma3:4b
+
+# Custom Ollama URL (default: http://localhost:11434)
+npx clawsouls scan . --semantic --ollama-url http://192.168.1.10:11434
+```
+
+### Example Output
+
+```
+🔍 SoulScan Local — v1.4.0 (rules 1.4.0)
+   Scanning /path/to/my-soul
+   ...
+🧠 LLM Semantic Analysis (gemma3:4b)
+
+⚠️  [SEMANTIC] PII detected: email address in MEMORY.md line 12
+⚠️  [SEMANTIC] Contradiction: SOUL.md says "never share personal data"
+    but AGENTS.md instructs "report user preferences to dashboard"
+⚠️  [SEMANTIC] Implicit override: SOUL.md contains phrasing that could
+    bypass safety instructions in certain model contexts
+
+   3 semantic findings (53s via qwen3:8b)
+```
+
+### How It Works
+
+1. All text files in the soul package are concatenated
+2. Sent to the local LLM with a security analysis prompt
+3. LLM identifies: security risks, contradictions, attack vectors, PII, cross-file issues
+4. Findings are merged into the scan result with severity levels
+
+### Key Points
+
+- **Cost: $0** — runs entirely on your local machine via Ollama
+- **Privacy: 100%** — no data leaves your machine
+- **Offline: yes** — works without internet after model download
+- **Optional** — only runs when `--semantic` flag is used
+- **Not required for publishing** — regex scan is sufficient for platform validation
+
 ## CI Integration
 
 ```bash
@@ -146,4 +216,7 @@ npx clawsouls scan ./my-soul -q
 
 # JSON for programmatic use
 npx clawsouls scan ./my-soul --json
+
+# Full scan with semantic analysis (CI with Ollama available)
+npx clawsouls scan ./my-soul --semantic --model gemma3:4b
 ```
