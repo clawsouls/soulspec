@@ -188,12 +188,15 @@ When `--strategy llm` is used, conflicting files are resolved by a local LLM via
 
 ### Setup
 
+Requires [Ollama](https://ollama.ai) running locally (free, offline, private):
+
 ```bash
 # Install Ollama
 curl -fsSL https://ollama.ai/install.sh | sh
 
-# Pull a model
-ollama pull gemma3:4b
+# Pull a model (any works — smaller = faster)
+ollama pull gemma3:4b    # ~3GB, fast
+ollama pull qwen3:8b     # ~5GB, more accurate
 
 # Start Ollama
 ollama serve
@@ -208,35 +211,7 @@ npx clawsouls swarm merge --strategy llm
 # Specify model
 npx clawsouls swarm merge --strategy llm --model qwen3:8b
 
-# Remote Ollama server
-npx clawsouls swarm merge --strategy llm --ollama-url http://192.168.1.10:11434
-```
-
-### Setup
-
-Requires [Ollama](https://ollama.ai) running locally:
-
-```bash
-# Install Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
-
-# Pull a model
-ollama pull gemma3:4b
-
-# Start Ollama
-ollama serve
-```
-
-### Usage
-
-```bash
-# LLM merge with auto-detected model
-npx clawsouls swarm merge --strategy llm
-
-# Specify model
-npx clawsouls swarm merge --strategy llm --model qwen3:8b
-
-# Custom Ollama URL
+# Custom Ollama URL (e.g., remote server)
 npx clawsouls swarm merge --strategy llm --ollama-url http://192.168.1.10:11434
 
 # Merge specific agent only
