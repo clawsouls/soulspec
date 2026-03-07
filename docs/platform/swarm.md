@@ -245,6 +245,66 @@ npx clawsouls swarm merge --strategy llm --agent brad
 - **Personality-aware** — the LLM uses `soul.json` to make identity-consistent decisions
 - Falls back gracefully if Ollama is unavailable
 
+## How Sync Works
+
+Swarm Memory lives in a dedicated directory (`~/.openclaw/swarm/`), separate from the agent's workspace. When you pull or merge, the CLI automatically syncs memory files to the agent's workspace so the running agent picks them up.
+
+```
+┌──────────────────────────────┐
+│  Swarm Git Repo              │
+│  ~/.openclaw/swarm/          │
+│  (shared across all agents)  │
+└──────────┬───────────────────┘
+           │
+    swarm pull / merge
+           │
+    ┌──────▼──────────┐
+    │  swarm sync      │  (automatic)
+    │  copies files →  │
+    └──────┬──────────┘
+           │
+┌──────────▼───────────────────┐
+│  OpenClaw Workspace          │
+│  ~/.openclaw/workspace/      │
+│  MEMORY.md, SOUL.md, etc.   │
+└──────────┬───────────────────┘
+           │
+    gateway restart
+           │
+┌──────────▼───────────────────┐
+│  Running Agent               │
+│  (reads updated files)       │
+└──────────────────────────────┘
+```
+
+### What Gets Synced
+
+| File | Direction | Notes |
+|------|-----------|-------|
+| `MEMORY.md` | swarm → workspace | Agent's long-term memory |
+| `memory/*.md` | swarm → workspace | Daily/session memory files |
+| `SOUL.md` | swarm → workspace | Personality definition |
+| `IDENTITY.md` | swarm → workspace | Identity metadata |
+| `AGENTS.md` | swarm → workspace | Workflow rules |
+| `soul.json` | swarm → workspace | Soul package manifest |
+
+### Manual Sync
+
+If you need to sync without pulling:
+
+```bash
+cd ~/.openclaw/swarm
+npx clawsouls swarm sync
+```
+
+### VSCode Extension
+
+The [ClawSouls Agent extension](/platform/vscode) handles sync automatically:
+- **Pull** button → runs `swarm pull` + `swarm sync` + restarts gateway
+- **Merge** button → runs `swarm merge` + `swarm sync` + restarts gateway
+
+No manual steps needed — your agent sees updated memories immediately.
+
 ## Use Cases
 
 ### Multi-Device Agent
