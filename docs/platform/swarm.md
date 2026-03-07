@@ -290,7 +290,7 @@ Swarm Memory lives in a dedicated directory (`~/.openclaw/swarm/`), separate fro
 
 ### Manual Sync
 
-If you need to sync without pulling:
+If you need to sync without pulling (requires CLI v0.13.0+):
 
 ```bash
 cd ~/.openclaw/swarm
