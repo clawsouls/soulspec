@@ -78,17 +78,7 @@ ollama pull bge-m3
 
 ## Channel Adapters
 
-Deploy your agent to any messaging platform:
-
-```yaml
-# soulclaw.json
-{
-  "telegram": {
-    "token": "BOT_TOKEN",
-    "allowedUsers": ["user_id"]
-  }
-}
-```
+Deploy your agent to any messaging platform.
 
 Supported channels:
 - **Telegram** — Full support (inline buttons, reactions, voice)
@@ -96,6 +86,69 @@ Supported channels:
 - **Slack** — App integration, threads
 - **Signal** — End-to-end encrypted
 - **iMessage** — macOS only (BlueBubbles)
+
+### Telegram Setup Guide
+
+**Step 1: Create a Telegram Bot**
+
+1. Open Telegram and search for **@BotFather**
+2. Send `/newbot` and follow the prompts
+3. Set a name and username for your bot
+4. Copy the **Bot Token** (e.g., `7123456789:AAH...`)
+
+**Step 2: Configure SoulClaw**
+
+Option A — Interactive wizard:
+```bash
+soulclaw configure --section channels
+# Select Telegram → Paste your Bot Token
+```
+
+Option B — Edit config directly (`~/.openclaw/openclaw.json`):
+```json
+{
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "7123456789:AAH..."
+    }
+  }
+}
+```
+
+**Step 3: Start the Gateway**
+
+```bash
+soulclaw gateway restart
+```
+
+**Step 4: Pair Your Account**
+
+1. Open Telegram and send any message to your bot
+2. A pairing code will appear in the terminal logs
+3. Approve the pairing:
+
+```bash
+soulclaw pairing approve telegram <code>
+```
+
+**Step 5: (Optional) Restrict Access**
+
+To allow only specific users:
+
+```bash
+soulclaw config set session.dmScope "per-channel-peer"
+```
+
+Your bot is now live — send it a message and it will respond with your soul's personality.
+
+### Other Channels
+
+For Discord, Slack, Signal, and iMessage, use the interactive wizard:
+
+```bash
+soulclaw configure --section channels
+```
 
 ## Automation
 
