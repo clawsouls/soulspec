@@ -299,7 +299,7 @@ npx clawsouls swarm sync
 
 ### VSCode Extension
 
-The [ClawSouls Agent extension](/platform/vscode) handles sync automatically:
+The ClawSouls Agent extension handles sync automatically:
 - **Pull** button → runs `swarm pull` + `swarm sync` + restarts gateway
 - **Merge** button → runs `swarm merge` + `swarm sync` + restarts gateway
 
