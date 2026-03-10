@@ -41,7 +41,7 @@ Read more: [Tiered Bootstrap deep dive](https://blog.clawsouls.ai/en/posts/soulc
 ## Installation
 
 ```bash
-npm install -g openclaw
+npm install -g soulclaw
 ```
 
 ## Quick Start
