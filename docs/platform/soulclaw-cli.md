@@ -48,13 +48,13 @@ npm install -g soulclaw
 
 ```bash
 # Initial setup
-openclaw setup
+soulclaw setup
 
 # Start the gateway
-openclaw gateway start
+soulclaw gateway start
 
 # Check status
-openclaw status
+soulclaw status
 ```
 
 ## Semantic Memory Search
@@ -81,7 +81,7 @@ ollama pull bge-m3
 Deploy your agent to any messaging platform:
 
 ```yaml
-# openclaw.json
+# soulclaw.json
 {
   "telegram": {
     "token": "BOT_TOKEN",
@@ -103,14 +103,14 @@ Supported channels:
 
 ```bash
 # Schedule tasks
-openclaw cron add --schedule "0 8 * * *" --message "Daily standup report"
+soulclaw cron add --schedule "0 8 * * *" --message "Daily standup report"
 ```
 
 ### Background Sessions
 
 ```bash
 # Spawn isolated agent sessions
-openclaw sessions spawn --task "Analyze logs and report issues"
+soulclaw sessions spawn --task "Analyze logs and report issues"
 ```
 
 ## Soul Integration
@@ -156,6 +156,6 @@ clawsouls soulscan --init
 ## Links
 
 - [GitHub](https://github.com/clawsouls/soulclaw)
-- [npm](https://www.npmjs.com/package/openclaw)
+- [npm](https://www.npmjs.com/package/soulclaw)
 - [Soul Spec](/docs/spec/overview)
 - [SoulScan](/docs/platform/soulscan)
