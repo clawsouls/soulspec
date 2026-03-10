@@ -61,20 +61,70 @@ soulclaw status
 
 SoulClaw CLI uses Ollama's bge-m3 embedding model for semantic memory retrieval. Unlike keyword matching, this finds contextually relevant memories even when exact words don't match.
 
-```bash
-# Install Ollama + embedding model
-ollama pull bge-m3
+### Setup
 
-# Memory search happens automatically during conversations
-# The agent searches MEMORY.md + memory/*.md using vector similarity
+**Step 1: Install Ollama**
+
+Download from [ollama.com](https://ollama.com) and install.
+
+**Step 2: Pull the embedding model**
+
+```bash
+ollama pull bge-m3
+```
+
+> bge-m3 is ~600MB. It supports multilingual embeddings (English, Korean, Chinese, Japanese, etc.)
+
+**Step 3: Enable memory search in SoulClaw**
+
+```bash
+soulclaw config set agents.defaults.memorySearch.enabled true
+soulclaw config set agents.defaults.memorySearch.provider ollama
+```
+
+Or edit `~/.openclaw/openclaw.json` directly:
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "memorySearch": {
+        "enabled": true,
+        "provider": "ollama"
+      }
+    }
+  }
+}
+```
+
+**Step 4: Restart the gateway**
+
+```bash
+soulclaw gateway restart
+```
+
+**Step 5: Verify**
+
+```bash
+soulclaw memory status --deep
 ```
 
 ### How It Works
 
-1. **Indexing**: Memory files are chunked and embedded on startup
+1. **Indexing**: Memory files (`MEMORY.md` + `memory/*.md`) are chunked and embedded on startup
 2. **Query**: Each user message triggers a semantic search
 3. **Retrieval**: Top-k relevant snippets are injected into context
 4. **Update**: New memories are indexed in real-time
+
+### Supported Providers
+
+| Provider | Model | Setup |
+|----------|-------|-------|
+| **Ollama** (default) | bge-m3 | Local, free, multilingual |
+| OpenAI | text-embedding-3-small | Requires API key |
+| Gemini | embedding-001 | Requires API key |
+| Voyage | voyage-3 | Requires API key |
+| Mistral | mistral-embed | Requires API key |
 
 ## Channel Adapters
 
