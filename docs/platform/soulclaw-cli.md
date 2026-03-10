@@ -12,12 +12,31 @@ Full-featured AI agent in your terminal. Gateway-based architecture with multi-c
 
 | Feature | Description |
 |---------|-------------|
+| **Tiered Bootstrap** | Loads only needed context — up to 60% fewer tokens per session |
 | **Semantic Memory Search** | Vector-based memory recall powered by Ollama bge-m3 |
 | **Channel Adapters** | Telegram, Discord, Slack, Signal, iMessage |
 | **Gateway Architecture** | Centralized gateway with session management |
 | **Cron Jobs** | Scheduled tasks and background automation |
 | **Multi-Agent Sessions** | Multiple agents running concurrently |
 | **SoulScan** | CLI-based security scanning |
+
+## Tiered Bootstrap
+
+SoulClaw CLI uses a **tiered bootstrapping** system that dramatically reduces token consumption:
+
+- **Tier 0 (Always)**: SOUL.md, IDENTITY.md — core personality (~500 tokens)
+- **Tier 1 (On demand)**: MEMORY.md, USER.md — loaded when relevant
+- **Tier 2 (Lazy)**: memory/*.md, TOOLS.md — loaded only when referenced
+- **Tier 3 (Search)**: Semantic search results — injected per-query
+
+Instead of loading all files into every conversation, SoulClaw injects only what the current context requires. This means:
+
+- **60% fewer tokens** on average per session
+- **Faster responses** — less context to process
+- **Lower cost** — pay only for tokens you actually need
+- **Longer conversations** — more room before hitting context limits
+
+Read more: [Tiered Bootstrap deep dive](https://blog.clawsouls.ai/en/posts/soulclaw-tiered-bootstrap/)
 
 ## Installation
 
