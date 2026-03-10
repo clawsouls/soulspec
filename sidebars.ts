@@ -49,6 +49,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Platform',
       items: [
+        'platform/soulclaw-cli',
         'platform/publishing',
         'platform/soulscan',
         'platform/checkpoint',
