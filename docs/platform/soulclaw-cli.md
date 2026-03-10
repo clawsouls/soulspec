@@ -47,8 +47,8 @@ npm install -g soulclaw
 ## Quick Start
 
 ```bash
-# Initial setup
-soulclaw setup
+# Interactive onboarding (gateway + workspace + channels)
+soulclaw onboard
 
 # Start the gateway
 soulclaw gateway start
