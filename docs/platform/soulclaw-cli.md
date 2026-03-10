@@ -155,7 +155,7 @@ clawsouls soulscan --init
 
 ## Links
 
-- [GitHub](https://github.com/clawsouls/soulclaw-cli)
+- [GitHub](https://github.com/clawsouls/soulclaw)
 - [npm](https://www.npmjs.com/package/openclaw)
 - [Soul Spec](/docs/spec/overview)
 - [SoulScan](/docs/platform/soulscan)
