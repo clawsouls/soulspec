@@ -231,6 +231,37 @@ workspace/
 └── TOOLS.md         # Tool configuration
 ```
 
+## Switching Souls
+
+To change your AI's persona:
+
+```bash
+# 1. Install the soul
+clawsouls install clawsouls/charlie
+
+# 2. Apply it to your workspace
+clawsouls use clawsouls/charlie
+
+# 3. Restart the gateway
+soulclaw gateway restart
+
+# 4. Start a fresh session
+# Send /new in Telegram/chat to clear previous persona context
+```
+
+:::caution Session Reset Required
+After switching souls, **you must start a new session** (`/new` in Telegram, or refresh the gateway chat UI). The previous conversation history contains responses from the old persona — the LLM will continue mimicking it until the session is cleared.
+
+This applies to all chat interfaces: Telegram, Discord, gateway web UI, etc.
+:::
+
+To revert to your previous soul:
+```bash
+clawsouls restore
+soulclaw gateway restart
+# Send /new in chat
+```
+
 ## SoulScan
 
 Run security scans from the terminal:
