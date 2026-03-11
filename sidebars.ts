@@ -41,6 +41,7 @@ const sidebars: SidebarsConfig = {
       label: 'API Reference',
       items: [
         'api/rest-api',
+        'api/soulscan-api',
         'api/mcp',
         'api/cli',
       ],
