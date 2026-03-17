@@ -55,6 +55,7 @@ const sidebars: SidebarsConfig = {
         'platform/soulscan',
         'platform/checkpoint',
         'platform/swarm',
+        'platform/dag-memory',
         'platform/web-editor',
       ],
     },
