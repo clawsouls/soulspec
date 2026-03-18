@@ -34,6 +34,7 @@ const sidebars: SidebarsConfig = {
         'guides/cursor',
         'guides/windsurf',
         'guides/memory-sync',
+        'guides/migration-from-openclaw',
       ],
     },
     {
