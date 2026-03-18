@@ -264,18 +264,208 @@ soulclaw gateway restart
 
 ## SoulScan
 
-Run security scans from the terminal:
+Scan soul files for security and quality issues directly from the terminal.
 
 ```bash
-# Scan current soul package
-clawsouls soulscan
+# Scan workspace (default)
+soulclaw soulscan
 
-# Quick scan (for cron)
-clawsouls soulscan -q
+# Scan a specific directory
+soulclaw soulscan ./my-soul
 
-# Initialize baseline
-clawsouls soulscan --init
+# JSON output (for CI/CD pipelines)
+soulclaw soulscan --json
+
+# Set minimum passing score (default: 30)
+soulclaw soulscan --min-score 70
 ```
+
+SoulScan runs a **4-stage pipeline**: Schema → File Structure → Security (58+ rules) → Quality.
+
+| Score | Grade | Meaning |
+|-------|-------|---------|
+| 90-100 | Verified | Clean, no issues |
+| 70-89 | Low Risk | Minor warnings |
+| 40-69 | Medium Risk | Needs attention |
+| 1-39 | High Risk | Significant issues |
+| 0 | Blocked | Critical security problems |
+
+**Inline Scanning**: SoulScan also runs automatically after agent turns (rate-limited to once per 5 minutes) when SOUL.md or soul.json exists in the workspace.
+
+You can also use the clawsouls CLI for quick scans:
+
+```bash
+clawsouls soulscan
+clawsouls soulscan -q    # Quick mode (single-line output)
+```
+
+## Persona Engine
+
+Monitor persona drift — detect when an agent's responses deviate from its defined personality in SOUL.md.
+
+### Enable Drift Detection
+
+Drift detection is **disabled by default**. Enable it with:
+
+```bash
+soulclaw persona config --enable
+```
+
+### Configuration
+
+```bash
+# View current settings
+soulclaw persona config
+
+# Check every N agent responses (default: 5)
+soulclaw persona config --interval 3
+
+# Set warning threshold (0-1, default: 0.3)
+soulclaw persona config --threshold 0.4
+
+# Set severe alert threshold (0-1, default: 0.7)
+soulclaw persona config --severe 0.8
+
+# Enable/disable notifications
+soulclaw persona config --notify
+soulclaw persona config --no-notify
+
+# Use Ollama (default) or keyword-only detection
+soulclaw persona config --no-ollama
+
+# Set Ollama model
+soulclaw persona config --model qwen3:8b
+
+# Disable drift detection
+soulclaw persona config --disable
+```
+
+Config is stored in `openclaw.json`:
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "personaDrift": {
+        "enabled": true,
+        "checkInterval": 5,
+        "driftThreshold": 0.3,
+        "severeThreshold": 0.7,
+        "notify": true,
+        "useOllama": true,
+        "ollamaModel": "qwen3:8b"
+      }
+    }
+  }
+}
+```
+
+### Manual Drift Check
+
+```bash
+# Check a response against SOUL.md persona
+soulclaw persona check --text "Here is my response to evaluate"
+
+# View parsed persona rules
+soulclaw persona rules
+soulclaw persona rules --json
+
+# View drift check history
+soulclaw persona metrics
+soulclaw persona metrics -n 10
+```
+
+### How It Works
+
+1. Every N responses, the last assistant message is compared to SOUL.md rules
+2. **Ollama** (default) or **keyword matching** (fallback) computes a drift score (0 = perfect, 1 = full deviation)
+3. Above the warning threshold → **reminder injected** + notification sent
+4. Above the severe threshold → **severe warning** + urgent notification
+
+### Notifications
+
+When drift is detected, alerts are sent via the gateway to your configured messaging channels (Telegram, Discord, etc.):
+
+```
+⚠️ Persona Drift WARNING
+Score: 0.450 (method: keyword)
+Session: agent:main:telegram:12345
+Action: reminder
+```
+
+## Swarm Memory
+
+Sync memory files across multiple agents or devices via a shared Git repository.
+
+### Initialize
+
+```bash
+# Initialize swarm memory
+soulclaw swarm init
+
+# With a remote repository
+soulclaw swarm init --remote git@github.com:user/swarm-memory.git
+
+# Custom directory
+soulclaw swarm init --dir ~/my-swarm
+```
+
+### Status & Sync
+
+```bash
+# Check swarm status
+soulclaw swarm status
+
+# Force sync now
+soulclaw swarm sync
+
+# Sync with LLM-powered semantic merge for conflicts
+soulclaw swarm sync --llm-merge
+
+# Specify Ollama model for merge
+soulclaw swarm sync --llm-merge --model gemma3:4b
+```
+
+### Conflict Resolution
+
+When multiple agents modify the same files, conflicts can occur:
+
+```bash
+# Auto-resolve with LLM semantic merge (default)
+soulclaw swarm resolve
+
+# Resolve a specific file
+soulclaw swarm resolve MEMORY.md
+
+# Keep our version
+soulclaw swarm resolve --ours
+
+# Keep their version
+soulclaw swarm resolve --theirs
+
+# List conflicted files for manual editing
+soulclaw swarm resolve --manual
+```
+
+The **LLM semantic merge** sends conflicted files to Ollama, which preserves unique information from both sides, removes duplicates, and resolves intelligently. Falls back to "ours" if Ollama is unavailable.
+
+### Configuration
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "swarm": {
+        "dir": "~/.openclaw/swarm",
+        "autoSync": true,
+        "syncIntervalMinutes": 10
+      }
+    }
+  }
+}
+```
+
+Auto-sync runs every 10 minutes when the gateway is running, copying `MEMORY.md` and `memory/*.md` between workspace and swarm repo.
 
 ## Comparison with VSCode Extension
 
