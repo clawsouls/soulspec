@@ -57,6 +57,7 @@ const sidebars: SidebarsConfig = {
         'platform/checkpoint',
         'platform/swarm',
         'platform/dag-memory',
+        'platform/cli-commands',
         'platform/web-editor',
       ],
     },
