@@ -52,6 +52,7 @@ const sidebars: SidebarsConfig = {
       label: 'Platform',
       items: [
         'platform/soulclaw-cli',
+        'platform/soul-memory',
         'platform/publishing',
         'platform/soulscan',
         'platform/checkpoint',
