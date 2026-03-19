@@ -61,6 +61,10 @@ soulclaw status
 
 SoulClaw CLI uses Ollama's bge-m3 embedding model for semantic memory retrieval. Unlike keyword matching, this finds contextually relevant memories even when exact words don't match.
 
+:::tip Soul Memory Architecture
+For the full memory system — temporal decay, automatic promotion, and quarterly compaction — see the dedicated **[Soul Memory](/docs/platform/soul-memory)** page.
+:::
+
 ### Setup
 
 **Step 1: Install Ollama**
