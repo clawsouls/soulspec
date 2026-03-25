@@ -4,14 +4,24 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Soul Spec Docs',
-  tagline: 'Open standard for AI agent personas',
+  tagline: 'Open standard for AI agent personas — built for OpenClaw',
   favicon: 'img/favicon.ico',
 
-  url: 'https://clawsouls.github.io',
+  url: 'https://docs.clawsouls.ai',
   baseUrl: '/',
 
   organizationName: 'clawsouls',
   projectName: 'soulspec',
+
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'keywords',
+        content: 'OpenClaw,AI,AI agent,AI persona,AI personality,agent persona,soul,Soul Spec,SoulSpec,SOUL.md,soul.md,hosting,AI agent hosting,AI agent deploy,context engineering,system prompt,prompt template,AI character,agent memory,agent personality,AI agent template,AI agent marketplace,Claude Code persona,cursor rules,BYOK,LLM persona,ClawSouls,SoulClaw,SoulScan,SoulHub,prompt engineering',
+      },
+    },
+  ],
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
