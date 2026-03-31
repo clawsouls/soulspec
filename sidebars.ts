@@ -17,6 +17,7 @@ const sidebars: SidebarsConfig = {
       label: 'Spec Reference',
       items: [
         'spec/overview',
+        'spec/v0.6',
         'spec/v0.5',
         'spec/v0.4',
         'spec/v0.3',
