@@ -30,6 +30,7 @@ const sidebars: SidebarsConfig = {
       label: 'Framework Guides',
       items: [
         'guides/openclaw',
+        'guides/hermes',
         'guides/claude-code',
         'guides/claude-code-plugin',
         'guides/claude-desktop',
