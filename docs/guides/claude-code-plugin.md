@@ -1,12 +1,12 @@
 ---
 sidebar_position: 3
 title: ClawSouls Plugin for Claude
-description: Install the ClawSouls Cowork plugin — persona management, Telegram/Discord channels, SoulScan safety verification, and persistent memory.
+description: Install the ClawSouls plugin for Claude Code — persona management, Telegram/Discord channels, SoulScan safety verification, and persistent memory.
 ---
 
 # ClawSouls Plugin for Claude
 
-The ClawSouls plugin brings Soul Spec v0.5 persona management to Claude Code and Claude Cowork. Load personas from the registry, verify safety, manage persistent memory, and connect via Telegram or Discord.
+The ClawSouls plugin brings Soul Spec v0.5 persona management to Claude Code. Load personas from the registry, verify safety, manage persistent memory, and connect via Telegram or Discord.
 
 ## Installation
 
@@ -271,7 +271,7 @@ The same persona and MCP server work across platforms:
 
 | Platform | Integration |
 |----------|-------------|
-| **Claude Code / Cowork** | This plugin — `/clawsouls:*` commands |
+| **Claude Code** | This plugin — `/clawsouls:*` commands |
 | **OpenClaw / SoulClaw** | Native Soul Spec support |
 | **Cursor** | `.cursor/rules/` + `.mcp.json` |
 | **Windsurf** | `.windsurfrules` + `.mcp.json` |
