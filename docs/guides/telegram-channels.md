@@ -167,6 +167,6 @@ If using the plugin: run `/clawsouls:activate` after connecting.
 
 ## Next Steps
 
-- [ClawSouls Plugin Guide](./claude-code-plugin) — Full plugin documentation
-- [Your First Soul](../getting-started/your-first-soul) — Create your own persona
-- [Soul Spec v0.5](../spec/v0.5) — Full specification
+- [ClawSouls Plugin Guide](/docs/guides/claude-code-plugin) — Full plugin documentation
+- [Your First Soul](/docs/getting-started/your-first-soul) — Create your own persona
+- [Soul Spec v0.5](/docs/spec/v0.5) — Full specification
