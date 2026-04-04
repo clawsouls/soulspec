@@ -37,6 +37,7 @@ const sidebars: SidebarsConfig = {
         'guides/cursor',
         'guides/windsurf',
         'guides/telegram-channels',
+        'guides/migration-to-claude-channels',
         'guides/memory-sync',
         'guides/migration-from-openclaw',
       ],
