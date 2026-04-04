@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: ClawSouls Plugin for Claude
+title: ClawSouls Plugin for Claude Code
 description: Install the ClawSouls plugin for Claude Code — persona management, Telegram/Discord channels, SoulScan safety verification, and persistent memory.
 ---
 
