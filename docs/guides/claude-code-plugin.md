@@ -117,7 +117,7 @@ tmux new-session -d -s agent \
 
 ## MCP Tools
 
-The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) v0.3.0, providing 10 tools:
+The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) v0.4.0, providing 12 tools:
 
 ### Persona Management
 
@@ -141,8 +141,10 @@ The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) 
 
 | Tool | Description |
 |------|-------------|
-| `memory_search` | TF-IDF + BM25 ranked search across memory files |
+| `memory_search` | TF-IDF + BM25 ranked search (supports `enhanced` mode for full snippets) |
 | `memory_get` | Fetch specific memory file content by line range |
+| `memory_status` | File inventory, sizes, last modified dates, git status |
+| `memory_sync` | Multi-agent Git sync (init / push / pull / status) |
 
 ## Memory System
 
