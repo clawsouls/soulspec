@@ -31,7 +31,6 @@ const sidebars: SidebarsConfig = {
       items: [
         'guides/openclaw',
         'guides/hermes',
-        'guides/claude-code',
         'guides/claude-code-plugin',
         'guides/claude-desktop',
         'guides/cursor',
