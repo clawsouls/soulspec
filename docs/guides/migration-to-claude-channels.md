@@ -1,6 +1,6 @@
 ---
 sidebar_position: 12
-sidebar_label: Migration to Claude Channels
+sidebar_label: Migration to Claude Code Channels
 title: "Migration Guide: OpenClaw → Claude Code Channels"
 description: Migrate your Soul Spec agent from OpenClaw/SoulClaw to Claude Code Channels with Telegram or Discord support.
 ---
