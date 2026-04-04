@@ -117,7 +117,7 @@ tmux new-session -d -s agent \
 
 ## MCP Tools
 
-The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) v0.4.0, providing 12 tools:
+The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) v0.5.0, providing 12 tools:
 
 ### Persona Management
 
@@ -141,7 +141,7 @@ The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) 
 
 | Tool | Description |
 |------|-------------|
-| `memory_search` | TF-IDF + BM25 ranked search (supports `enhanced` mode for full snippets) |
+| `memory_search` | Hybrid TF-IDF + semantic search (auto-detects Ollama for bge-m3 embeddings; `enhanced` + `mode` params) |
 | `memory_get` | Fetch specific memory file content by line range |
 | `memory_status` | File inventory, sizes, last modified dates, git status |
 | `memory_sync` | Multi-agent Git sync (init / push / pull / status) |
@@ -168,15 +168,35 @@ project/
 | FileChanged | prompt | SOUL.md/IDENTITY.md modified | Alerts persona drift |
 | SessionEnd | agent | Session closes | Flushes unsaved context |
 
-### Memory Search
+### Memory Search (Hybrid)
 
-Zero-cost, local TF-IDF search with:
+The search engine auto-detects your environment:
+
+| Mode | When | How |
+|------|------|-----|
+| 🧠 **Hybrid** | Ollama running with bge-m3 | 0.4× TF-IDF + 0.6× semantic (cosine similarity) |
+| 📝 **FTS** | No Ollama | TF-IDF + BM25 (zero dependencies) |
+
+Both modes include:
 - BM25 term frequency saturation
 - Korean + English tokenization
 - Recency boost (7 days: 1.3×, 30 days: 1.1×)
 
 ```
 /clawsouls:memory search "trademark filing"
+```
+
+To force a specific mode:
+```
+memory_search query="..." mode="fts"    # TF-IDF only
+memory_search query="..." mode="hybrid" # Force semantic
+```
+
+**Ollama setup** (optional, for hybrid mode):
+```bash
+# Install Ollama and pull bge-m3
+ollama pull bge-m3
+# soul-spec-mcp auto-detects at localhost:11434
 ```
 
 ## Soul File Locations
