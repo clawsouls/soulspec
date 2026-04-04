@@ -188,22 +188,13 @@ Soul Spec is framework-agnostic. Any tool that reads markdown persona files work
 - 📝 [blog.clawsouls.ai](https://blog.clawsouls.ai) — Research & tutorials
 - 📧 [contact@clawsouls.ai](mailto:contact@clawsouls.ai) — Questions & partnerships
 
-## Contributing
-
-Soul Spec is an open standard maintained by [ClawSouls](https://github.com/clawsouls). We welcome:
-
-- 🐛 Bug reports and spec improvements
-- 🌍 Translations
-- 🎨 Soul contributions to the marketplace
-- 🔌 Framework adapters
-
 ## About
 
 Soul Spec is an open standard for AI agent personas — maintained by ClawSouls and open to community contributions.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+We welcome bug reports, spec improvements, translations, and framework adapters. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
