@@ -28,7 +28,7 @@ No plugin needed — just the persona:
 
 ```bash
 # Export any soul from the registry
-npx clawsouls export claude-md TomLeeLive/brad > CLAUDE.md
+npx clawsouls install clawsouls/brad && npx clawsouls export claude-md > CLAUDE.md
 
 # Or manually combine Soul Spec files
 cat SOUL.md IDENTITY.md AGENTS.md > CLAUDE.md
@@ -60,7 +60,7 @@ claude
 
 ```bash
 # Load a persona from the registry
-/clawsouls:load-soul TomLeeLive/brad
+/clawsouls:load-soul clawsouls/brad
 
 # Activate the persona
 /clawsouls:activate
@@ -219,7 +219,7 @@ Analyzes persona files against 53 safety patterns:
 
 ```
 /clawsouls:scan                      # Active soul
-/clawsouls:scan TomLeeLive/brad      # Registry soul
+/clawsouls:scan clawsouls/brad      # Registry soul
 /clawsouls:scan ./my-agent/          # Local directory
 ```
 
