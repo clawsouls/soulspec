@@ -16,7 +16,8 @@
 </p>
 
 <p align="center">
-  <a href="https://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/license-CC--BY--4.0-blue" alt="License" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/code-Apache--2.0-blue" alt="Code License" /></a>
+  <a href="./docs/LICENSE"><img src="https://img.shields.io/badge/docs-CC--BY--4.0-blue" alt="Docs License" /></a>
   <a href="https://www.npmjs.com/package/clawsouls"><img src="https://img.shields.io/npm/v/clawsouls?label=CLI" alt="npm" /></a>
   <a href="https://clawsouls.ai"><img src="https://img.shields.io/badge/souls-80%2B-brightgreen" alt="Souls" /></a>
 </p>
@@ -196,9 +197,17 @@ Soul Spec is an open standard maintained by [ClawSouls](https://github.com/claws
 - 🎨 Soul contributions to the marketplace
 - 🔌 Framework adapters
 
+## About
+
+Soul Spec is an open standard for AI agent personas — maintained by ClawSouls and open to community contributions.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+
 ## License
 
-[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) — use it, extend it, build on it. Attribution appreciated.
+Code in this repository is licensed under [Apache 2.0](LICENSE). Documentation is licensed under [CC-BY-4.0](docs/LICENSE). See individual directories for details.
 
 ---
 
