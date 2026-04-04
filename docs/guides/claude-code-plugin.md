@@ -16,7 +16,7 @@ No marketplace registration needed:
 
 ```bash
 # Clone the plugin
-git clone https://github.com/clawsouls/claude-code-plugin.git ~/.claude/clawsouls-plugin
+git clone https://github.com/clawsouls/clawsouls-claude-code-plugin.git ~/.claude/clawsouls-plugin
 
 # Launch Claude Code with the plugin
 claude --plugin-dir ~/.claude/clawsouls-plugin
@@ -257,7 +257,7 @@ The same persona and MCP server work across platforms:
 
 ## Links
 
-- [Plugin Repository](https://github.com/clawsouls/claude-code-plugin)
+- [Plugin Repository](https://github.com/clawsouls/clawsouls-claude-code-plugin)
 - [MCP Server (npm)](https://www.npmjs.com/package/soul-spec-mcp)
 - [ClawSouls Registry](https://clawsouls.ai/souls)
 - [Soul Spec Standard](https://soulspec.org)
