@@ -54,7 +54,7 @@ which bun  # Verify installation
 ### Step 3: Clone the ClawSouls Plugin
 
 ```bash
-git clone https://github.com/clawsouls/cowork-plugin.git ~/.claude/clawsouls-plugin
+git clone https://github.com/clawsouls/claude-code-plugin.git ~/.claude/clawsouls-plugin
 ```
 
 ### Step 4: Copy Soul Spec Files

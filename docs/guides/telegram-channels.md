@@ -58,7 +58,7 @@ Open Claude Code and run:
 For persona management:
 
 ```bash
-git clone https://github.com/clawsouls/cowork-plugin.git ~/.claude/clawsouls-plugin
+git clone https://github.com/clawsouls/claude-code-plugin.git ~/.claude/clawsouls-plugin
 ```
 
 ### 4. Launch with Channels
