@@ -4,7 +4,7 @@ title: ClawSouls Plugin for Claude Code
 description: Install the ClawSouls plugin for Claude Code — persona management, Telegram/Discord channels, SoulScan safety verification, and persistent memory.
 ---
 
-# ClawSouls Plugin for Claude
+# ClawSouls Plugin for Claude Code
 
 The ClawSouls plugin brings Soul Spec v0.5 persona management to Claude Code. Load personas from the registry, verify safety, manage persistent memory, and connect via Telegram or Discord.
 
