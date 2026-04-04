@@ -255,10 +255,10 @@ Both share the same Soul Spec files and memory directory. Changes made in one ar
 
 ## Troubleshooting
 
-See the [Telegram Channels Setup](/guides/telegram-channels#troubleshooting) guide for common issues.
+See the [Telegram Channels Setup](./telegram-channels#troubleshooting) guide for common issues.
 
 ## Next Steps
 
-- [ClawSouls Plugin Guide](/guides/claude-code-plugin) — Full plugin documentation
-- [Telegram Channels Setup](/guides/telegram-channels) — Detailed Telegram guide
-- [Soul Spec v0.5](/spec/v0.5) — Full specification
+- [ClawSouls Plugin Guide](./claude-code-plugin) — Full plugin documentation
+- [Telegram Channels Setup](./telegram-channels) — Detailed Telegram guide
+- [Soul Spec v0.5](../spec/v0.5) — Full specification
