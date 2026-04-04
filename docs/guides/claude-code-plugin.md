@@ -54,6 +54,7 @@ claude
 | `/clawsouls:browse` | Search personas by keyword or category |
 | `/clawsouls:scan` | Safety verification — 53 patterns, A+ to F grade |
 | `/clawsouls:export` | Package current persona as Soul Spec directory |
+| `/clawsouls:rollback` | Compare current vs. baseline persona, detect drift |
 | `/clawsouls:memory` | Search, read, write, and manage memory files |
 
 ## Quick Start
@@ -252,7 +253,7 @@ If both `CLAUDE.md` and a loaded soul exist, Claude receives conflicting instruc
 
 ```bash
 # Test manually
-npx soul-spec-mcp@0.3.0
+npx soul-spec-mcp@0.5.0
 
 # Remote fallback (edit .mcp.json in plugin dir)
 {
@@ -275,7 +276,7 @@ The same persona and MCP server work across platforms:
 | **OpenClaw / SoulClaw** | Native Soul Spec support |
 | **Cursor** | `.cursor/rules/` + `.mcp.json` |
 | **Windsurf** | `.windsurfrules` + `.mcp.json` |
-| **Any MCP client** | `npx soul-spec-mcp@0.3.0` |
+| **Any MCP client** | `npx soul-spec-mcp@0.5.0` |
 
 ## Links
 

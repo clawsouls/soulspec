@@ -25,7 +25,7 @@ Claude Code Channels provides similar functionality to OpenClaw's messaging inte
 | **Signal** | ✅ Built-in | ❌ | OpenClaw-only |
 | **Soul Spec persona** | ✅ Native | ✅ Via ClawSouls plugin | Equivalent |
 | **Persistent memory** | ✅ Auto (DAG + passive) | ⚠️ Via plugin hooks | Plugin needed |
-| **Memory search** | ✅ Semantic + TF-IDF | ✅ TF-IDF via MCP | MCP tool |
+| **Memory search** | ✅ Semantic + TF-IDF | ✅ TF-IDF + hybrid via MCP | Ollama auto-detect |
 | **Always-on daemon** | ✅ Built-in | ⚠️ tmux/screen | Manual setup |
 | **Heartbeat/cron** | ✅ Built-in | ❌ | External cron needed |
 | **Multi-channel** | ✅ Simultaneous | ✅ `--channels` flag | Equivalent |
