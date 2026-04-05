@@ -57,7 +57,24 @@ which bun  # Verify installation
 git clone https://github.com/clawsouls/clawsouls-claude-code-plugin.git ~/.claude/clawsouls-plugin
 ```
 
-### Step 4: Copy Soul Spec Files
+### Step 4: Migrate Your Workspace
+
+**Option A: Automated migration (recommended)**
+
+```bash
+# Create your project directory
+mkdir -p ~/projects/my-agent && cd ~/projects/my-agent
+
+# Launch Claude Code with the plugin
+claude --plugin-dir ~/.claude/clawsouls-plugin
+
+# Inside Claude Code, run:
+/clawsouls:migrate
+```
+
+The migrate command auto-detects your `~/.openclaw/workspace/`, shows a preview of what will be copied/archived/skipped, and executes on your confirmation. It also generates a `CLAUDE.md` with memory rules and cleans OpenClaw-specific directives from `AGENTS.md`.
+
+**Option B: Manual copy**
 
 ```bash
 # Create your project directory
