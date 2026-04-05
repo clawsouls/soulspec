@@ -208,6 +208,57 @@ crontab -e
 
 The Telegram message triggers Claude Code to check for pending work.
 
+## How Memory Works After Migration
+
+In OpenClaw, the framework handles memory automatically — passive memory extraction, auto-compaction, and session hooks all run without explicit instructions. After migrating to Claude Code, memory becomes **instruction-driven**: the agent follows rules in `CLAUDE.md` to decide when and what to save.
+
+### Add Memory Rules to CLAUDE.md
+
+This is the most important step. Without these rules, the agent won't persist new knowledge across sessions:
+
+```markdown
+## Memory Rules
+- Session start: read MEMORY.md + recent memory/*.md files
+- Important decisions/discoveries → memory/YYYY-MM-DD.md (daily log)
+- Long-running project context → memory/topic-<project>.md
+- Long-term knowledge (contacts, architecture, rules) → promote to MEMORY.md
+- Topic files: History max 30 lines, Decisions max 50 lines
+- Before context gets full: save unsaved knowledge to memory files
+- Use /clawsouls:memory search to find past context before answering
+```
+
+### Runtime Memory Flow
+
+```
+1. Session starts → agent reads MEMORY.md + memory/*.md (SessionStart hook)
+2. During work → agent writes discoveries to memory/2026-04-05.md
+3. Context fills up → PreCompact hook saves unsaved context
+4. Session ends → SessionEnd hook flushes remaining knowledge
+5. Next session → reads updated files, continues where it left off
+```
+
+### What the Agent Creates Automatically
+
+| File | When created | Content |
+|------|-------------|---------|
+| `memory/YYYY-MM-DD.md` | Each working day | Decisions, bug fixes, progress notes |
+| `memory/topic-*.md` | When a new project starts | Status, key decisions, history for that project |
+| `MEMORY.md` updates | When important long-term knowledge emerges | Contacts, rules, architecture decisions |
+
+### Multi-Agent Memory Sharing
+
+If you run multiple Claude Code instances (e.g., one for coding, one for Telegram), use `memory_sync` to share knowledge via Git:
+
+```bash
+# Agent A pushes
+memory_sync action=push agent_name=coding-agent
+
+# Agent B pulls
+memory_sync action=pull
+```
+
+Both agents see the same memory files. Conflicts are resolved by preferring newer + human edits.
+
 ## What You Keep
 
 | Item | How |

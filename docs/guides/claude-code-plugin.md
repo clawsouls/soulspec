@@ -149,25 +149,91 @@ The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) 
 
 ## Memory System
 
-The plugin maintains persistent context across sessions using an OpenClaw-compatible memory layout:
+The plugin maintains persistent context across sessions using an OpenClaw-compatible memory layout. Claude Code has direct filesystem access, so the agent reads and writes memory files like any other file — no special API required.
+
+### How It Works
+
+```
+Session Start                    During Session                    Session End
+     │                                │                                │
+     ▼                                ▼                                ▼
+Read MEMORY.md              Write new knowledge to              SessionEnd hook
++ memory/*.md               memory/YYYY-MM-DD.md                flushes unsaved
+(via SessionStart hook)     or memory/topic-*.md                context to files
+```
+
+**Key concept**: In OpenClaw/SoulClaw, the framework manages memory automatically (passive memory extraction, auto-compaction). In Claude Code, memory is **instruction-driven** — the agent follows rules in `CLAUDE.md` to decide when and what to save, assisted by plugin hooks.
+
+### File Layout
 
 ```
 project/
-├── MEMORY.md           # Curated long-term knowledge (max 200 lines)
+├── CLAUDE.md           # Agent instructions (includes memory rules)
+├── MEMORY.md           # Curated long-term knowledge
+├── SOUL.md             # Persona definition
 ├── memory/
 │   ├── topic-*.md      # Topic-specific context (Status/Decisions/History)
 │   └── YYYY-MM-DD.md   # Daily session logs
 ```
 
+### CLAUDE.md Memory Rules
+
+Add these rules to your `CLAUDE.md` so the agent maintains memory autonomously. **Without these rules, the agent won't know to persist knowledge across sessions.**
+
+```markdown
+## Memory Rules
+- Session start: read MEMORY.md + recent memory/*.md files
+- Important decisions/discoveries → memory/YYYY-MM-DD.md (daily log)
+- Long-running project context → memory/topic-<project>.md
+- Long-term knowledge (contacts, architecture, rules) → promote to MEMORY.md
+- Topic files: History max 30 lines, Decisions max 50 lines
+- Before context gets full: save unsaved knowledge to memory files
+- Use /clawsouls:memory search to find past context before answering
+```
+
+### What Gets Saved and When
+
+| Trigger | What the agent writes | Where |
+|---------|----------------------|-------|
+| Important decision made | Decision record with rationale | `memory/topic-*.md` |
+| Bug fix or root cause found | Problem → cause → solution | `memory/YYYY-MM-DD.md` |
+| Session ending / context full | Key facts promoted | `MEMORY.md` |
+| User says "remember this" | Exact instruction | Appropriate file |
+| New contact, credential location, or rule | Permanent reference | `MEMORY.md` |
+
 ### Automatic Memory via Hooks
+
+Plugin hooks provide automatic triggers at key moments:
 
 | Hook | Type | When | Action |
 |------|------|------|--------|
-| SessionStart | prompt | Session opens | Detects SOUL.md presence |
-| PreCompact | agent | Before compaction | Saves context to memory files |
-| PostCompact | prompt | After compaction | Reloads SOUL.md |
+| SessionStart | prompt | Session opens | Reads SOUL.md, injects memory context |
+| PreCompact | agent | Before compaction | Saves unsaved context to memory files |
+| PostCompact | prompt | After compaction | Reloads SOUL.md + memory |
 | FileChanged | prompt | SOUL.md/IDENTITY.md modified | Alerts persona drift |
-| SessionEnd | agent | Session closes | Flushes unsaved context |
+| SessionEnd | agent | Session closes | Flushes remaining context to files |
+
+### Migrating Memory from OpenClaw
+
+The file layout is identical — just copy:
+
+```bash
+cp ~/.openclaw/workspace/MEMORY.md ./
+cp -r ~/.openclaw/workspace/memory/ ./memory/
+```
+
+All prior knowledge is immediately available. The agent picks up where it left off, and `memory_search` indexes the files automatically.
+
+### OpenClaw vs Claude Code Memory Comparison
+
+| Aspect | OpenClaw/SoulClaw | Claude Code + Plugin |
+|--------|-------------------|---------------------|
+| **Memory creation** | Framework auto-extracts (passive memory) | Agent writes files per CLAUDE.md rules |
+| **Compaction** | Automatic on context overflow | PreCompact hook + agent judgment |
+| **Search** | bge-m3 semantic + hybrid | TF-IDF/BM25 (hybrid with Ollama) |
+| **Sync** | Single machine | Git-based multi-device (`memory_sync`) |
+| **File format** | Markdown files | Same markdown files (100% compatible) |
+| **Cost** | API pay-as-you-go | $0 within Claude subscription |
 
 ### Memory Search (Hybrid)
 
