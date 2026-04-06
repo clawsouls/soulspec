@@ -151,6 +151,48 @@ Expected response:
 
 ## Step 5: Configure OpenClaw / SoulClaw
 
+### Method 1: As Fallback (Recommended)
+
+This keeps your primary cloud model and uses Qwen3.5 as backup. Best for maintaining response quality while having zero-cost option:
+
+```json title="openclaw.json"
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "apiKey": "dummy",
+        "api": "openai-completions",
+        "models": [
+          { "id": "qwen3.5:latest", "name": "qwen3.5" }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-opus-4-6",
+        "fallbacks": [
+          "anthropic/claude-sonnet-4-20250514",
+          "ollama/qwen3.5:latest"
+        ]
+      }
+    }
+  },
+  "memory": {
+    "embedding": {
+      "provider": "ollama",
+      "model": "bge-m3:latest"
+    }
+  }
+}
+```
+
+### Method 2: Primary Model (Zero API Cost)
+
+For pure local operation without cloud APIs:
+
 ```json title="openclaw.json"
 {
   "agents": {
@@ -277,6 +319,8 @@ ollama pull gemma4:26b  # 18GB — requires 32GB RAM
 2. Verify models exist for your account: `ls ~/.ollama/models/manifests/`
 3. Kill the other server, restart from your account
 
+**Real-world case**: We encountered this when switching between the `father` and `openclaw` user accounts. Ollama server was running under one account while models were installed under another.
+
 ### Out of Memory
 ```bash
 # Check loaded models
@@ -292,12 +336,132 @@ ollama rm <model-name>
 ### Models Missing After Upgrade
 Major Ollama upgrades may change model format. Re-pull: `ollama pull qwen3.5:latest`
 
+### OpenClaw Config Structure Issues
+
+**Problem**: Using the wrong config structure can cause model discovery failures.
+
+**Wrong** (old format):
+```json
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3.5:latest"
+      }
+    }
+  }
+}
+```
+
+**Correct** (v2026.3.32+ format):
+```json
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "apiKey": "dummy",
+        "api": "openai-completions",
+        "models": [
+          { "id": "qwen3.5:latest", "name": "qwen3.5" }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3.5:latest"
+      }
+    }
+  }
+}
+```
+
+### Auth Profiles for Local Models
+
+If you get "No API key found for provider ollama" errors, create an auth profile:
+
+```json title="~/.openclaw/agents/main/agent/auth-profiles.json"
+{
+  "version": 1,
+  "profiles": {
+    "ollama:default": {
+      "type": "none",
+      "provider": "ollama"
+    }
+  },
+  "lastGood": {
+    "ollama": "ollama:default"
+  }
+}
+```
+
+### Separate SoulClaw Profiles Not Needed
+
+**Don't do this**: Creating separate `--profile qwen` instances with independent configs.
+
+**Do this**: Use the same OpenClaw instance with model switching:
+```bash
+# Switch to Qwen3.5
+# Edit ~/.openclaw/openclaw.json primary model
+soulclaw gateway restart
+```
+
+This maintains session continuity and shared memory.
+
+## Production Experience
+
+### Performance Reality Check
+
+While tool calling works well, **conversational performance has significant limitations**:
+
+| Use Case | Claude Opus (API) | Qwen3.5 (Local) | Verdict |
+|----------|-------------------|------------------|---------|
+| Simple questions | ~2-5 seconds | **~10 minutes** | 😱 Too slow for chat |
+| Tool calling | ~5-10 seconds | ~10-30 seconds | 🤔 Acceptable for batch |
+| Code generation | ~3-8 seconds | ~5-15 minutes | ❌ Impractical |
+| Memory search | ~2-3 seconds | ~5-10 seconds | ✅ Usable |
+
+### Recommended Usage Patterns
+
+**✅ Good for:**
+- Batch processing and cron jobs
+- Tool calling / function execution
+- Memory search and embedding
+- Cost-sensitive environments
+- Offline development
+
+**❌ Avoid for:**
+- Real-time chat assistance
+- Interactive debugging sessions  
+- Time-sensitive tasks
+- Primary model for active development
+
+### Architecture Recommendations
+
+**Hybrid Setup** (best of both worlds):
+```json
+{
+  "model": {
+    "primary": "anthropic/claude-opus-4-6",      // Fast chat
+    "fallbacks": ["ollama/qwen3.5:latest"]       // Cost backup
+  }
+}
+```
+
+**Local-First** (for air-gapped environments):
+- Use Qwen3.5 as primary
+- Set very high patience expectations 
+- Consider smaller models (Llama 3.1 8B) for faster responses
+
 ## Benchmarks (Mac mini M4 32GB)
 
 | Metric | Result |
 |--------|--------|
 | First load | ~1.6s |
 | Tool calling response | ~4.5s (first call) |
+| Conversational response | ~3-12 minutes |
 | GPU utilization | 100% Apple Silicon |
 | Context length | 32,768 tokens |
 | Concurrent models | qwen3.5 + bge-m3 (11GB / 32GB) |
