@@ -1,21 +1,21 @@
 ---
 sidebar_position: 8
-title: Local LLM with Qwen3.5
-description: Run Soul Spec agents locally with Ollama and Qwen3.5 — zero server cost, full tool calling support.
+title: Local LLM with Gemma 4
+description: Run Soul Spec agents locally with Ollama and Gemma 4 26B — zero server cost, full tool calling support.
 ---
 
-# Local LLM with Qwen3.5
+# Local LLM with Gemma 4
 
-Run your Soul Spec agent locally using [Ollama](https://ollama.com/) and Qwen3.5 — a 35B parameter MoE model with only 3B active parameters. **Zero API costs**, full tool calling, and Apple Silicon optimized.
+Run your Soul Spec agent locally using [Ollama](https://ollama.com/) and Gemma 4 26B — a full dense 26B parameter model from Google AI. **Zero API costs**, full tool calling, excellent Korean support, and Apple Silicon optimized.
 
 ## Requirements
 
 | Item | Minimum | Recommended |
 |------|---------|-------------|
-| RAM | 16GB | 32GB |
-| Disk | 10GB free | 20GB free |
+| RAM | 24GB | 32GB+ |
+| Disk | 20GB free | 30GB free |
 | OS | macOS 13+ / Linux | macOS 14+ (Apple Silicon) |
-| Ollama | 0.20.0+ | 0.20.2+ |
+| Ollama | 0.19+ | latest (MLX support for Apple Silicon) |
 
 ## Step 1: Install Ollama
 
@@ -28,7 +28,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 # Verify
 ollama --version
-# Requires 0.20.0+
+# Requires 0.19+
 ```
 
 ### Linux
@@ -52,8 +52,8 @@ ps aux | grep "ollama serve" | grep -v grep
 ## Step 2: Pull Models
 
 ```bash
-# Qwen3.5 (35B params, 3B active MoE, 6.6GB)
-ollama pull qwen3.5:latest
+# Gemma 4 26B (17GB — chat, Korean excellent)
+ollama pull gemma4:26b
 
 # bge-m3 (embedding model for semantic search, 1.2GB)
 ollama pull bge-m3:latest
@@ -66,11 +66,11 @@ ollama list
 
 | Model | Disk | Memory (loaded) | Purpose |
 |-------|------|-----------------|---------|
-| qwen3.5:latest | 6.6GB | ~9.7GB | Chat, tool calling |
+| gemma4:26b | 17GB | ~20GB | Chat, tool calling |
 | bge-m3:latest | 1.2GB | ~1.3GB | Semantic search (memory_search) |
-| **Total** | **7.8GB** | **~11GB** | |
+| **Total** | **~18.2GB** | **~21GB** | |
 
-Runs comfortably on 32GB. Possible on 16GB but may swap under load.
+Runs comfortably on 32GB. Possible on 24GB with models loaded sequentially.
 
 ## Step 3: Server Configuration
 
@@ -117,7 +117,7 @@ launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist
 
 ```bash
 curl -s http://localhost:11434/api/chat -d '{
-  "model": "qwen3.5:latest",
+  "model": "gemma4:26b",
   "messages": [{"role": "user", "content": "What is 2+2? Use the calculator tool."}],
   "tools": [{
     "type": "function",
@@ -153,7 +153,7 @@ Expected response:
 
 ### Method 1: As Fallback (Recommended)
 
-This keeps your primary cloud model and uses Qwen3.5 as backup. Best for maintaining response quality while having zero-cost option:
+This keeps your primary cloud model and uses Gemma 4 as backup. Best for maintaining response quality while having zero-cost option:
 
 ```json title="openclaw.json"
 {
@@ -164,7 +164,7 @@ This keeps your primary cloud model and uses Qwen3.5 as backup. Best for maintai
         "apiKey": "dummy",
         "api": "openai-completions",
         "models": [
-          { "id": "qwen3.5:latest", "name": "qwen3.5" }
+          { "id": "gemma4:26b", "name": "gemma4-26b" }
         ]
       }
     }
@@ -175,7 +175,7 @@ This keeps your primary cloud model and uses Qwen3.5 as backup. Best for maintai
         "primary": "anthropic/claude-opus-4-6",
         "fallbacks": [
           "anthropic/claude-sonnet-4-20250514",
-          "ollama/qwen3.5:latest"
+          "ollama/gemma4:26b"
         ]
       }
     }
@@ -198,16 +198,13 @@ For pure local operation without cloud APIs:
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ollama/qwen3.5:latest"
+        "primary": "ollama/gemma4:26b"
       }
     }
   },
   "providers": {
     "ollama": {
-      "baseUrl": "http://localhost:11434",
-      "defaultOptions": {
-        "num_predict": 2000
-      }
+      "baseUrl": "http://localhost:11434"
     }
   },
   "memory": {
@@ -219,98 +216,26 @@ For pure local operation without cloud APIs:
 }
 ```
 
-:::info Why `num_predict: 2000`?
-See the [Thinking Mode](#thinking-mode-caveat) section below. Without this, Qwen3.5 may consume all tokens on internal reasoning and return empty responses.
-:::
-
 ## Step 6: Language Quality
 
-Qwen3.5 supports multilingual chat but **doesn't know your domain-specific context** (your products, your team, etc.). SOUL.md and memory files provide this context at runtime.
+Gemma 4 26B supports multilingual chat at high quality and **doesn't know your domain-specific context** (your products, your team, etc.). SOUL.md and memory files provide this context at runtime.
 
 | Capability | Quality |
 |-----------|---------|
-| General conversation | ⭐⭐⭐⭐ |
-| Tool calling | ⭐⭐⭐⭐⭐ (excellent) |
+| General conversation | ⭐⭐⭐⭐⭐ |
+| Tool calling | ⭐⭐⭐⭐ (good, improving) |
+| Korean | ⭐⭐⭐⭐⭐ (excellent, Tom verified) |
 | Code generation | ⭐⭐⭐⭐ |
-| Domain knowledge | ⭐⭐ (supplement via SOUL.md) |
-| Thinking / reasoning | ⭐⭐⭐⭐ |
-| Korean | ⭐⭐⭐⭐ |
-| Japanese / Chinese | ⭐⭐⭐⭐ |
+| Emotional expression | ⭐⭐⭐⭐⭐ (rich, natural) |
 
-## Thinking Mode Caveat {#thinking-mode-caveat}
+## Alternative: Qwen3.5
 
-:::danger Important: Empty Responses
-Qwen3.5 has **thinking mode enabled by default**. This can cause:
+[Qwen3.5](https://ollama.com/library/qwen3.5) (35B MoE, 3B active) is lighter (6.6GB) but has significant issues:
+- Thinking mode consumes tokens, causing empty responses
+- Conversational response time: ~10 minutes on Mac mini M4
+- Requires workarounds (`/no_think`, custom Modelfile)
 
-1. All output tokens consumed by internal reasoning
-2. `content` field returns empty string (`""`)
-3. CLI shows `Thinking...` with no actual answer
-:::
-
-### Symptoms
-
-```json
-// API response — content is empty!
-{
-  "message": {
-    "content": "",
-    "thinking": "Thinking Process:\n\n1. **Analyze the Request:**\n..."
-  }
-}
-```
-
-### Solutions
-
-**Option 1: Add `/no_think` to system prompt**
-```json
-{
-  "messages": [
-    {"role": "system", "content": "You are a helpful assistant. /no_think"},
-    {"role": "user", "content": "Your question here"}
-  ]
-}
-```
-
-**Option 2: Increase `num_predict`** (recommended: 2000+)
-```json
-{
-  "options": {"num_predict": 2000}
-}
-```
-
-**Option 3: Custom Modelfile with thinking disabled**
-```bash title="Modelfile.no-think"
-FROM qwen3.5:latest
-PARAMETER num_predict 2000
-TEMPLATE """{{- if .System }}<|im_start|>system
-{{ .System }}<|im_end|>
-{{ end }}<|im_start|>user
-{{ .Prompt }}<|im_end|>
-<|im_start|>assistant
-"""
-```
-
-```bash
-ollama create qwen3.5-no-think -f Modelfile.no-think
-```
-
-### Impact Matrix
-
-| Use Case | Affected? |
-|----------|-----------|
-| Tool calling | ✅ No — tool_calls are separate from content |
-| Chat responses | ❌ **Empty content** — apply fix above |
-| Code generation | ❌ **Empty content** — apply fix above |
-| Embeddings (bge-m3) | ✅ Not affected |
-
-## Alternative: Gemma 4
-
-[Gemma 4](https://ai.google.dev/gemma) (26B, 4B active) is also Apache 2.0 licensed, but currently has reported issues with tool calling. We recommend Qwen3.5 first, with Gemma 4 as a future option once tool calling stabilizes.
-
-```bash
-# Future — after tool calling is stable
-ollama pull gemma4:26b  # 18GB — requires 32GB RAM
-```
+We recommend Gemma 4 for most users. Use Qwen3.5 only if RAM is limited (<24GB).
 
 ## Troubleshooting
 
@@ -334,7 +259,7 @@ ollama rm <model-name>
 ```
 
 ### Models Missing After Upgrade
-Major Ollama upgrades may change model format. Re-pull: `ollama pull qwen3.5:latest`
+Major Ollama upgrades may change model format. Re-pull: `ollama pull gemma4:26b`
 
 ### OpenClaw Config Structure Issues
 
@@ -346,7 +271,7 @@ Major Ollama upgrades may change model format. Re-pull: `ollama pull qwen3.5:lat
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ollama/qwen3.5:latest"
+        "primary": "ollama/gemma4:26b"
       }
     }
   }
@@ -363,7 +288,7 @@ Major Ollama upgrades may change model format. Re-pull: `ollama pull qwen3.5:lat
         "apiKey": "dummy",
         "api": "openai-completions",
         "models": [
-          { "id": "qwen3.5:latest", "name": "qwen3.5" }
+          { "id": "gemma4:26b", "name": "gemma4-26b" }
         ]
       }
     }
@@ -371,7 +296,7 @@ Major Ollama upgrades may change model format. Re-pull: `ollama pull qwen3.5:lat
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ollama/qwen3.5:latest"
+        "primary": "ollama/gemma4:26b"
       }
     }
   }
@@ -399,11 +324,11 @@ If you get "No API key found for provider ollama" errors, create an auth profile
 
 ### Separate SoulClaw Profiles Not Needed
 
-**Don't do this**: Creating separate `--profile qwen` instances with independent configs.
+**Don't do this**: Creating separate `--profile gemma4` instances with independent configs.
 
 **Do this**: Use the same OpenClaw instance with model switching:
 ```bash
-# Switch to Qwen3.5
+# Switch to Gemma 4
 # Edit ~/.openclaw/openclaw.json primary model
 soulclaw gateway restart
 ```
@@ -414,29 +339,30 @@ This maintains session continuity and shared memory.
 
 ### Performance Reality Check
 
-While tool calling works well, **conversational performance has significant limitations**:
+Gemma 4 26B is fast enough for real-time chat on Apple Silicon:
 
-| Use Case | Claude Opus (API) | Qwen3.5 (Local) | Verdict |
-|----------|-------------------|------------------|---------|
-| Simple questions | ~2-5 seconds | **~10 minutes** | 😱 Too slow for chat |
-| Tool calling | ~5-10 seconds | ~10-30 seconds | 🤔 Acceptable for batch |
-| Code generation | ~3-8 seconds | ~5-15 minutes | ❌ Impractical |
-| Memory search | ~2-3 seconds | ~5-10 seconds | ✅ Usable |
+| Use Case | Claude Opus (API) | Gemma 4 26B (Local) | Verdict |
+|----------|-------------------|---------------------|---------|
+| Simple questions | ~2-5s | ~5-15s | ✅ Usable |
+| Tool calling | ~5-10s | ~10-20s | ✅ Good |
+| Code generation | ~3-8s | ~15-45s | 🤔 Acceptable |
+| Memory search | ~2-3s | ~5-10s | ✅ Good |
+| Korean chat | ~2-5s | ~5-15s | ✅ Natural |
 
 ### Recommended Usage Patterns
 
 **✅ Good for:**
-- Batch processing and cron jobs
+- Real-time chat
 - Tool calling / function execution
-- Memory search and embedding
+- Korean conversations
+- 24/7 agent (always-on, zero cost)
+- Cron jobs and batch processing
 - Cost-sensitive environments
 - Offline development
 
 **❌ Avoid for:**
-- Real-time chat assistance
-- Interactive debugging sessions  
-- Time-sensitive tasks
-- Primary model for active development
+- Complex multi-step reasoning (use Opus)
+- Very long code generation
 
 ### Architecture Recommendations
 
@@ -444,24 +370,29 @@ While tool calling works well, **conversational performance has significant limi
 ```json
 {
   "model": {
-    "primary": "anthropic/claude-opus-4-6",      // Fast chat
-    "fallbacks": ["ollama/qwen3.5:latest"]       // Cost backup
+    "primary": "anthropic/claude-opus-4-6",      // Complex tasks
+    "fallbacks": ["ollama/gemma4:26b"]           // Cost backup / always-on
   }
 }
 ```
 
-**Local-First** (for air-gapped environments):
-- Use Qwen3.5 as primary
-- Set very high patience expectations 
-- Consider smaller models (Llama 3.1 8B) for faster responses
+**Local-First** (for air-gapped or 24/7 environments):
+- Use Gemma 4 26B as primary
+- Handles most conversations naturally
+- Fallback to cloud only for complex reasoning
 
-## Benchmarks (Mac mini M4 32GB)
+## Benchmarks (Mac mini M4 24GB)
 
 | Metric | Result |
 |--------|--------|
-| First load | ~1.6s |
-| Tool calling response | ~4.5s (first call) |
-| Conversational response | ~3-12 minutes |
+| Model size | 17GB |
+| First load | ~3s |
+| Conversational response | ~5-15s |
 | GPU utilization | 100% Apple Silicon |
 | Context length | 32,768 tokens |
-| Concurrent models | qwen3.5 + bge-m3 (11GB / 32GB) |
+
+## Real-World: Twin Brad Architecture
+
+We run Gemma 4 26B as "Brad" — a 24/7 local agent handling monitoring, cron jobs, and casual conversations. A separate Claude Opus instance ("Brad Pro") handles complex tasks. Both share the same Soul Spec persona via Swarm Memory.
+
+This demonstrates Soul Spec's model portability — same personality, different engines.
