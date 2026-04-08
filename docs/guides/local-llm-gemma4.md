@@ -224,7 +224,7 @@ Gemma 4 26B supports multilingual chat at high quality and **doesn't know your d
 |-----------|---------|
 | General conversation | ⭐⭐⭐⭐⭐ |
 | Tool calling | ⭐⭐⭐⭐ (good, improving) |
-| Korean | ⭐⭐⭐⭐⭐ (excellent, Tom verified) |
+| Korean | ⭐⭐⭐⭐⭐ (excellent) |
 | Code generation | ⭐⭐⭐⭐ |
 | Emotional expression | ⭐⭐⭐⭐⭐ (rich, natural) |
 
