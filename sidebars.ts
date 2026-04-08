@@ -39,7 +39,7 @@ const sidebars: SidebarsConfig = {
         'guides/migration-to-claude-channels',
         'guides/memory-sync',
         'guides/migration-from-openclaw',
-        'guides/local-llm-qwen35',
+        'guides/local-llm-gemma4',
       ],
     },
     {
