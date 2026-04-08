@@ -235,7 +235,7 @@ Gemma 4 26B supports multilingual chat at high quality and **doesn't know your d
 - Conversational response time: ~10 minutes on Mac mini M4
 - Requires workarounds (`/no_think`, custom Modelfile)
 
-We recommend Gemma 4 for most users. Use Qwen3.5 only if RAM is limited (<24GB).
+We recommend Gemma 4 for most users. Use Qwen3.5 only if RAM is limited (under 24GB).
 
 ## Troubleshooting
 
