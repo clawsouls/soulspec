@@ -176,19 +176,83 @@ project/
 │   └── YYYY-MM-DD.md   # Daily session logs
 ```
 
-### CLAUDE.md Memory Rules
+### Topic DAG (topic-map.json)
 
-Add these rules to your `CLAUDE.md` so the agent maintains memory autonomously. **Without these rules, the agent won't know to persist knowledge across sessions.**
+Track relationships between memory topics for faster navigation:
+
+```json
+{
+  "topics": {
+    "my-project": {
+      "file": "topic-my-project.md",
+      "status": "active",
+      "depends": ["infrastructure"],
+      "related": ["marketing", "business"]
+    }
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `status` | `active` or `paused` — controls Tier 2 loading |
+| `depends` | Topics that must be read first for context |
+| `related` | Topics to check when working in this area |
+
+The agent uses this DAG during Tier 3 to find related context without scanning all files.
+
+### CLAUDE.md Configuration Template
+
+Add these sections to your `CLAUDE.md` so the agent maintains memory autonomously. **Without these rules, the agent won't know to persist knowledge across sessions.**
+
+#### 4-Tier Session Bootstrap
+
+```markdown
+## Session Start Protocol (4-Tier Bootstrap)
+
+### Tier 1 — Always (every session)
+1. Load persona: SOUL.md → IDENTITY.md → AGENTS.md
+2. Read MEMORY.md (index)
+3. Current date/time
+
+### Tier 2 — First Response
+4. Read most recent memory/YYYY-MM-DD.md (daily log)
+5. Read active topic files (memory/topic-*.md)
+6. `/clawsouls:memory search` — restore recent context
+
+### Tier 3 — On Demand
+7. Search related topic files (via topic-map.json)
+8. Archive memory (memory/archive/) — only for old context
+9. External docs — only when relevant
+
+### Tier 4 — Background
+10. Channel integrations (Slack, Telegram bridges)
+```
+
+This mirrors the [Soul Memory](/docs/platform/soul-memory) 4-tier architecture (T0–T3) at the session level.
+
+#### Memory Rules
 
 ```markdown
 ## Memory Rules
-- Session start: read MEMORY.md + recent memory/*.md files
+- Follow 4-Tier Bootstrap Protocol above
 - Important decisions/discoveries → memory/YYYY-MM-DD.md (daily log)
 - Long-running project context → memory/topic-<project>.md
-- Long-term knowledge (contacts, architecture, rules) → promote to MEMORY.md
+- Long-term knowledge → promote to MEMORY.md
 - Topic files: History max 30 lines, Decisions max 50 lines
-- Before context gets full: save unsaved knowledge to memory files
-- Use /clawsouls:memory search to find past context before answering
+- Use `/clawsouls:memory search` for hybrid semantic search
+- Search before answering questions about past context
+
+### Auto-Promotion Rules
+- 3+ times referenced → promote to MEMORY.md
+- User says "remember this" → immediate promotion
+- Cost/contract/legal decisions → always promote
+- Project status changes → update topic-map.json
+
+### Compact Mode (context pressure)
+- Before compaction: save key facts to daily log
+- Use PreCompact hook for automatic reminders
+- Restore order: MEMORY.md → recent daily log → topic files
 ```
 
 ### What Gets Saved and When
@@ -212,6 +276,7 @@ Plugin hooks provide automatic triggers at key moments:
 | PostCompact | prompt | After compaction | Reloads SOUL.md + memory |
 | FileChanged | prompt | SOUL.md/IDENTITY.md modified | Alerts persona drift |
 | SessionEnd | agent | Session closes | Flushes remaining context to files |
+| Heartbeat | prompt | Periodic (configurable) | Self-check: channels, tasks, memory save, blockers |
 
 ### Migrating Memory from OpenClaw
 
