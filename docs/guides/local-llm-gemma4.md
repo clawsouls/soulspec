@@ -244,7 +244,7 @@ We recommend Gemma 4 for most users. Use Qwen3.5 only if RAM is limited (under 2
 2. Verify models exist for your account: `ls ~/.ollama/models/manifests/`
 3. Kill the other server, restart from your account
 
-**Real-world case**: We encountered this when switching between the `father` and `openclaw` user accounts. Ollama server was running under one account while models were installed under another.
+**Real-world case**: This commonly happens when switching between multiple macOS user accounts. Ollama server was running under one account while models were installed under another.
 
 ### Out of Memory
 ```bash
