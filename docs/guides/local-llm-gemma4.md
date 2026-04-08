@@ -22,14 +22,20 @@ Run your Soul Spec agent locally using [Ollama](https://ollama.com/) and Gemma 4
 ### macOS
 
 ```bash
-# Download from https://ollama.com/download/mac
-# Or install via CLI:
+# Option A: Homebrew (recommended — auto-updates, MLX backend)
+brew install --cask ollama-app
+
+# Option B: CLI installer
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Verify
 ollama --version
-# Requires 0.19+
+# Requires 0.19+ (MLX backend for Apple Silicon)
 ```
+
+:::tip Ollama 0.19+ and MLX
+Ollama 0.19 introduced the **MLX backend** for Apple Silicon, providing native acceleration without going through Metal shaders. This significantly improves prefill speed (up to 1,851 tok/s) and enables shared prompt caching across sessions. Always use 0.19+ on Apple Silicon.
+:::
 
 ### Linux
 
@@ -70,7 +76,18 @@ ollama list
 | bge-m3:latest | 1.2GB | ~1.3GB | Semantic search (memory_search) |
 | **Total** | **~18.2GB** | **~21GB** | |
 
-Runs comfortably on 32GB. Possible on 24GB with models loaded sequentially.
+### RAM Recommendation
+
+| RAM | Recommended Model | Notes |
+|-----|-------------------|-------|
+| 16GB | `gemma4` (8B, Q4) | Stable, no swapping |
+| 24GB | `gemma4:26b` | Tight — system swap may occur under load. Load models sequentially. |
+| 32GB+ | `gemma4:26b` | Comfortable — chat + bge-m3 simultaneously |
+| 64GB+ | `gemma4:26b` FP16 | Maximum quality, no quantization loss |
+
+:::warning 24GB Machines
+On 24GB unified memory (e.g., Mac mini M4), the 26B model (~20GB loaded) leaves minimal headroom for macOS and other processes. You may experience UI lag and occasional swapping. Consider the 8B variant (`ollama pull gemma4`) for smoother daily use, or close memory-heavy apps before running the 26B model.
+:::
 
 ## Step 3: Server Configuration
 
@@ -112,6 +129,35 @@ open -a Ollama
 ```bash
 launchctl load ~/Library/LaunchAgents/com.ollama.serve.plist
 ```
+
+### Model Preload on Boot
+
+Even with `OLLAMA_KEEP_ALIVE=-1`, the model isn't loaded into memory until the first request after a reboot. To eliminate cold-start delay, add a preload agent:
+
+```xml title="~/Library/LaunchAgents/com.ollama.preload.plist"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.ollama.preload</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/curl</string>
+    <string>-s</string>
+    <string>-X</string>
+    <string>POST</string>
+    <string>http://localhost:11434/api/generate</string>
+    <string>-d</string>
+    <string>{"model":"gemma4:26b","prompt":"hi","stream":false}</string>
+  </array>
+  <key>StartInterval</key><integer>300</integer>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>
+```
+
+This sends a minimal request every 5 minutes, keeping the model warm in memory.
 
 ## Step 4: Verify Tool Calling
 
