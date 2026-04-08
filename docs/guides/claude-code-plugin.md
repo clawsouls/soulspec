@@ -56,6 +56,7 @@ claude
 | `/clawsouls:export` | Package current persona as Soul Spec directory |
 | `/clawsouls:rollback` | Compare current vs. baseline persona, detect drift |
 | `/clawsouls:memory` | Search, read, write, and manage memory files |
+| `/clawsouls:migrate` | Migrate from OpenClaw — auto-scan, preview, confirm, execute |
 
 ## Quick Start
 
@@ -169,11 +170,15 @@ Read MEMORY.md              Write new knowledge to              SessionEnd hook
 ```
 project/
 ├── CLAUDE.md           # Agent instructions (includes memory rules)
-├── MEMORY.md           # Curated long-term knowledge
-├── SOUL.md             # Persona definition
+├── SOUL.md             # Persona definition (personality, principles)
+├── IDENTITY.md         # Agent identity (name, creature type, vibe)
+├── AGENTS.md           # Workflow rules, work style, safety
+├── MEMORY.md           # Curated long-term knowledge (index)
 ├── memory/
 │   ├── topic-*.md      # Topic-specific context (Status/Decisions/History)
-│   └── YYYY-MM-DD.md   # Daily session logs
+│   ├── topic-map.json  # DAG: topic relationships (status/depends/related)
+│   ├── YYYY-MM-DD.md   # Daily session logs
+│   └── archive/        # Compacted old session logs
 ```
 
 ### Topic DAG (topic-map.json)
@@ -318,11 +323,15 @@ Both modes include:
 /clawsouls:memory search "trademark filing"
 ```
 
-To force a specific mode:
-```
-memory_search query="..." mode="fts"    # TF-IDF only
-memory_search query="..." mode="hybrid" # Force semantic
-```
+To force a specific mode, use the `mode` parameter when calling the MCP tool:
+
+| Mode | Description |
+|------|-------------|
+| `auto` | Default — uses hybrid if Ollama available, FTS otherwise |
+| `fts` | Force TF-IDF only (no embeddings) |
+| `hybrid` | Force semantic + TF-IDF (requires Ollama + bge-m3) |
+
+Use `enhanced=true` for full snippets with score visualization (uses more tokens).
 
 **Ollama setup** (optional, for hybrid mode):
 ```bash
@@ -384,7 +393,7 @@ If both `CLAUDE.md` and a loaded soul exist, Claude receives conflicting instruc
 
 ```bash
 # Test manually
-npx soul-spec-mcp@0.5.0
+npx soul-spec-mcp@latest
 
 # Remote fallback (edit .mcp.json in plugin dir)
 {
@@ -407,7 +416,7 @@ The same persona and MCP server work across platforms:
 | **OpenClaw / SoulClaw** | Native Soul Spec support |
 | **Cursor** | `.cursor/rules/` + `.mcp.json` |
 | **Windsurf** | `.windsurfrules` + `.mcp.json` |
-| **Any MCP client** | `npx soul-spec-mcp@0.5.0` |
+| **Any MCP client** | `npx soul-spec-mcp@latest` |
 
 ## Links
 
