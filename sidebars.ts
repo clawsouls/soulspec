@@ -40,6 +40,7 @@ const sidebars: SidebarsConfig = {
         'guides/memory-sync',
         'guides/migration-from-openclaw',
         'guides/local-llm-gemma4',
+        'guides/soultalk',
       ],
     },
     {
