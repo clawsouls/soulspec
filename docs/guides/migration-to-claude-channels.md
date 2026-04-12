@@ -65,14 +65,31 @@ git clone https://github.com/clawsouls/clawsouls-claude-code-plugin.git ~/.claud
 # Create your project directory
 mkdir -p ~/projects/my-agent && cd ~/projects/my-agent
 
-# Launch Claude Code with the plugin
-claude --plugin-dir ~/.claude/clawsouls-plugin
+# Launch Claude Code with permissions skip + plugin
+claude --dangerously-skip-permissions \
+       --plugin-dir ~/.claude/clawsouls-plugin \
+       --channels plugin:telegram@claude-plugins-official
 
 # Inside Claude Code, run:
 /clawsouls:migrate
 ```
 
+When the LLM asks about Migration, type **yes** to confirm.
+
 The migrate command auto-detects your `~/.openclaw/workspace/`, shows a preview of what will be copied/archived/skipped, and executes on your confirmation. It also generates a `CLAUDE.md` with memory rules and cleans OpenClaw-specific directives from `AGENTS.md`.
+
+:::tip settings.json
+Before launching, ensure your `~/.claude/settings.json` includes:
+```json
+{
+  "enabledPlugins": {
+    "telegram@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true
+}
+```
+This enables the Telegram plugin and removes the repeated permissions prompt.
+:::
 
 **Option B: Manual copy**
 

@@ -43,15 +43,28 @@ Follow the prompts:
 
 Copy the token that BotFather returns (looks like `1234567890:AAH...`).
 
-### 2. Install the Telegram Channel Plugin
+### 2. Enable the Telegram Plugin
 
-Open Claude Code and run:
+Edit your Claude Code settings file:
 
+```bash
+vi ~/.claude/settings.json
 ```
-/plugin install telegram@claude-plugins-official
-/reload-plugins
-/telegram:configure <YOUR_BOT_TOKEN>
+
+Add the following (merge with existing content if file already exists):
+
+```json
+{
+  "enabledPlugins": {
+    "telegram@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true
+}
 ```
+
+:::tip skipDangerousModePermissionPrompt
+Setting `skipDangerousModePermissionPrompt: true` removes the repeated permission prompt when using `--dangerously-skip-permissions`. This is required for always-on agent sessions.
+:::
 
 ### 3. Install ClawSouls Plugin (Optional)
 
@@ -66,13 +79,19 @@ git clone https://github.com/clawsouls/clawsouls-claude-code-plugin.git ~/.claud
 Exit Claude Code and restart:
 
 ```bash
-# With ClawSouls plugin
-claude --plugin-dir ~/.claude/clawsouls-plugin \
+# With ClawSouls plugin + permissions skip
+claude --dangerously-skip-permissions \
+       --plugin-dir ~/.claude/clawsouls-plugin \
        --channels plugin:telegram@claude-plugins-official
 
 # Without ClawSouls plugin
-claude --channels plugin:telegram@claude-plugins-official
+claude --dangerously-skip-permissions \
+       --channels plugin:telegram@claude-plugins-official
 ```
+
+:::info --dangerously-skip-permissions
+This flag allows the agent to execute tools (file editing, shell commands) without manual confirmation for each action. Required for autonomous agent operation via Telegram. The `skipDangerousModePermissionPrompt` setting in `settings.json` prevents the repeated warning prompt.
+:::
 
 Look for: `Listening for channel messages from: plugin:telegram@claude-plugins-official`
 
