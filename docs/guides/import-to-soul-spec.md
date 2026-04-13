@@ -115,7 +115,7 @@ Each paragraph gets a confidence score (0–100%):
 - **90%+**: High confidence — multi-section keywords, clear intent
 - **70–89%**: Good confidence — primary keywords + context clues
 - **50–69%**: Moderate — single keyword or weak context
-- **<50%**: Low — ambiguous; marked for manual review
+- **Under 50%**: Low — ambiguous; marked for manual review
 
 Low-confidence sections appear in the output report. Review and reassign manually if needed.
 
@@ -220,7 +220,7 @@ If your dry run shows many low-confidence results, try:
 
 2. **Manually review and fix**
    - Run `--dry-run` to see the output
-   - Note sections with <70% confidence
+   - Note sections with under 70% confidence
    - Move text to correct files after import
    - Use `/clawsouls:scan` to verify safety after edits
 
@@ -353,7 +353,7 @@ npx clawsouls import ~/Library/Application\ Support/Claude/instructions.md --out
 **Q: What if --smart fails or requires API key?**
 
 A: `--smart` is optional. Standard keyword matching works for most personas. Only use `--smart` if:
-- Confidence scores are consistently low (<60%)
+- Confidence scores are consistently low (under 60%)
 - Your persona has non-English content (mixed KR/EN)
 - Content is highly abstract or unusual
 
