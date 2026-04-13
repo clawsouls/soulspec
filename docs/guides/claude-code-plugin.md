@@ -43,7 +43,32 @@ claude
 |-------------|---------|-------|
 | Claude Code | v2.1.80+ | Channels require v2.1.80+ |
 | Node.js | 18+ | For soul-spec-mcp server |
-| [Bun](https://bun.sh) | 1.0+ | Only for Telegram/Discord channels |
+| [Bun](https://bun.sh) | 1.0+ | **Required** for Telegram/Discord channels |
+
+#### Installing Bun
+
+Bun is required for Telegram and Discord channel support. Without it, `--channels` will appear to work but the bot **will not receive messages** (no pairing codes).
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://bun.sh/install | bash
+source ~/.zshrc  # or ~/.bashrc
+```
+
+**Windows (PowerShell):**
+```powershell
+irm bun.sh/install.ps1 | iex
+# Restart your terminal after installation
+```
+
+**Verify:**
+```bash
+bun --version  # Should show 1.x
+```
+
+:::caution Windows users
+After installing Bun on Windows, you **must restart your terminal** (or open a new PowerShell/Git Bash window) before launching Claude Code with `--channels`. If Bun is not in PATH when Claude Code starts, the Telegram plugin will silently fail to receive messages.
+:::
 
 ## Commands
 

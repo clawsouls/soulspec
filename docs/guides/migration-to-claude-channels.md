@@ -45,11 +45,25 @@ claude --version  # Needs v2.1.80+
 
 ### Step 2: Install Bun (for Telegram/Discord)
 
+Bun is **required** for Telegram and Discord channels. Without it, `--channels` will appear to work but the bot will not receive messages.
+
+**macOS / Linux:**
 ```bash
 curl -fsSL https://bun.sh/install | bash
 source ~/.zshrc  # or ~/.bashrc
 which bun  # Verify installation
 ```
+
+**Windows (PowerShell):**
+```powershell
+irm bun.sh/install.ps1 | iex
+# Restart your terminal after installation
+bun --version  # Verify
+```
+
+:::caution Windows users
+After installing Bun, **restart your terminal** before launching Claude Code with `--channels`. If Bun is not in PATH, the Telegram plugin will silently fail — no pairing codes will be generated.
+:::
 
 ### Step 3: Clone the ClawSouls Plugin
 

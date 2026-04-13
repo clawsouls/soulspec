@@ -23,9 +23,13 @@ Connect Claude Code to Telegram so you can message your AI agent from your phone
 | Requirement | How to get it |
 |-------------|---------------|
 | Claude Code v2.1.80+ | `claude update` |
-| Bun runtime | `curl -fsSL https://bun.sh/install \| bash` |
+| Bun runtime | macOS/Linux: `curl -fsSL https://bun.sh/install \| bash` / Windows: `irm bun.sh/install.ps1 \| iex` |
 | Telegram account | [telegram.org](https://telegram.org) |
 | Telegram bot token | [@BotFather](https://t.me/BotFather) → `/newbot` |
+
+:::caution Bun is required
+Without Bun, `--channels` will appear to work but the bot **will not receive messages** — no pairing codes will be generated. On Windows, restart your terminal after installing Bun.
+:::
 
 ## Step-by-Step Setup
 
