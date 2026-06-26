@@ -177,15 +177,37 @@ The plugin connects [soul-spec-mcp](https://github.com/clawsouls/soul-spec-mcp) 
 
 The plugin maintains persistent context across sessions using an OpenClaw-compatible memory layout. Claude Code has direct filesystem access, so the agent reads and writes memory files like any other file — no special API required.
 
+### Soul Recall (Active Memory)
+
+**Soul Memory** is the storage substrate above — plain markdown (`MEMORY.md` index + `memory/*.md` daily logs and topic files), git-versioned, no database. **Soul Recall** is the active retrieval layer on top of it.
+
+Without it, recalling a fact means the agent has to *decide* to run `/clawsouls:memory search` — so any turn where it doesn't think to search looks like amnesia. Soul Recall closes that gap: a `UserPromptSubmit` hook runs on **every** prompt, finds the most relevant memory, and injects it into context automatically — no manual search, no forgetting.
+
+Retrieval is **hybrid**:
+
+| Layer | When | How |
+|-------|------|-----|
+| 🧠 **Semantic** (primary) | Ollama running with bge-m3 | Query embedded once, cosine-ranked against a precomputed embedding cache. Tagged `[semantic]`. |
+| 📝 **Keyword** (fallback) | Ollama or cache unavailable | BM25 ranker — IDF + length norm + field/title boost + recency. Tagged `[keyword]`. |
+
+A `SessionStart` hook builds and refreshes the embedding cache incrementally (keyed by file mtime) at `~/.cache/clawsouls`, so per-prompt retrieval only embeds the query and stays fast.
+
+**Superseding & decay.** Memory frontmatter carries `status: active | stale | archived | superseded` plus `superseded_by:`. Archived and superseded memories are hidden from retrieval; stale ones are down-weighted and flagged with ⚠️ so the agent treats them as possibly outdated.
+
+:::tip Graceful fallback
+Soul Recall is semantic-primary when Ollama + bge-m3 are available, and degrades cleanly to the keyword ranker when they aren't. The hook never blocks a turn. The semantic-primary + keyword-fallback configuration was chosen by measured ablation — semantic recall beat both keyword-only and RRF rank-fusion (fusion diluted the semantic ranking), so the two are kept as primary/fallback rather than blended.
+:::
+
 ### How It Works
 
 ```
 Session Start                    During Session                    Session End
      │                                │                                │
      ▼                                ▼                                ▼
-Read MEMORY.md              Write new knowledge to              SessionEnd hook
-+ memory/*.md               memory/YYYY-MM-DD.md                flushes unsaved
-(via SessionStart hook)     or memory/topic-*.md                context to files
+SessionStart hook builds    UserPromptSubmit hook auto-         Agent saves unsaved
+the embedding cache;        injects relevant memory each        context to memory
+agent reads MEMORY.md       turn (Soul Recall); agent writes    files per CLAUDE.md
++ memory/*.md               to memory/YYYY-MM-DD.md / topic-*   rules before exit
 ```
 
 **Key concept**: In OpenClaw/SoulClaw, the framework manages memory automatically (passive memory extraction, auto-compaction). In Claude Code, memory is **instruction-driven** — the agent follows rules in `CLAUDE.md` to decide when and what to save, assisted by plugin hooks.
@@ -281,7 +303,6 @@ This mirrors the [Soul Memory](/docs/platform/soul-memory) 4-tier architecture (
 
 ### Compact Mode (context pressure)
 - Before compaction: save key facts to daily log
-- Use PreCompact hook for automatic reminders
 - Restore order: MEMORY.md → recent daily log → topic files
 ```
 
@@ -297,16 +318,14 @@ This mirrors the [Soul Memory](/docs/platform/soul-memory) 4-tier architecture (
 
 ### Automatic Memory via Hooks
 
-Plugin hooks provide automatic triggers at key moments:
+The plugin registers two hooks (in `hooks/hooks.json`), both powering Soul Recall:
 
-| Hook | Type | When | Action |
-|------|------|------|--------|
-| SessionStart | prompt | Session opens | Reads SOUL.md, injects memory context |
-| PreCompact | agent | Before compaction | Saves unsaved context to memory files |
-| PostCompact | prompt | After compaction | Reloads SOUL.md + memory |
-| FileChanged | prompt | SOUL.md/IDENTITY.md modified | Alerts persona drift |
-| SessionEnd | agent | Session closes | Flushes remaining context to files |
-| Heartbeat | prompt | Periodic (configurable) | Self-check: channels, tasks, memory save, blockers |
+| Hook | When | Action |
+|------|------|--------|
+| `SessionStart` | Session opens | Builds/refreshes the bge-m3 embedding cache (`memory-index.js`) — incremental, keyed by file mtime |
+| `UserPromptSubmit` | Every user prompt | Auto-retrieves the most relevant memory and injects it into context (`memory-retrieve.js`) |
+
+Both fail safe: any error, or a missing Ollama, simply skips injection — the turn is never blocked. Compaction-time and session-end persistence remain **instruction-driven** via the `CLAUDE.md` rules above (the agent saves to memory files itself), not separate hooks.
 
 ### Migrating Memory from OpenClaw
 
@@ -324,7 +343,7 @@ All prior knowledge is immediately available. The agent picks up where it left o
 | Aspect | OpenClaw/SoulClaw | Claude Code + Plugin |
 |--------|-------------------|---------------------|
 | **Memory creation** | Framework auto-extracts (passive memory) | Agent writes files per CLAUDE.md rules |
-| **Compaction** | Automatic on context overflow | PreCompact hook + agent judgment |
+| **Compaction** | Automatic on context overflow | Agent judgment per CLAUDE.md rules |
 | **Search** | bge-m3 semantic + hybrid | TF-IDF/BM25 (hybrid with Ollama) |
 | **Sync** | Single machine | Git-based multi-device (`memory_sync`) |
 | **File format** | Markdown files | Same markdown files (100% compatible) |
