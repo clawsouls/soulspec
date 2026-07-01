@@ -39,6 +39,7 @@ const sidebars: SidebarsConfig = {
         'guides/import-to-soul-spec',
         'guides/migration-to-claude-channels',
         'guides/memory-sync',
+        'guides/memory-git-sync',
         'guides/migration-from-openclaw',
         'guides/local-llm-gemma4',
         'guides/soultalk',
