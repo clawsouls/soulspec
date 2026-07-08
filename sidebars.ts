@@ -18,6 +18,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'spec/overview',
         'spec/v0.6',
+        'spec/v0.5.3',
         'spec/v0.5',
         'spec/v0.4',
         'spec/v0.3',
