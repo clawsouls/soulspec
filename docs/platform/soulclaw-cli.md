@@ -8,6 +8,10 @@ description: Full-featured AI agent in your terminal with semantic memory search
 
 Full-featured AI agent in your terminal. Gateway-based architecture with multi-channel deployment.
 
+:::info Updated for SoulClaw 2026.7.1
+SoulClaw has been rebased onto **OpenClaw v2026.7.1**. Soul Memory now rides the **`memory-core` extension**, and the new upstream feature set is available — including `/dreaming` (idle-time memory synthesis) and built-in video/music generation. This release requires **Node.js `>=24.15.0`** (or `>=22.22.3`, or `>=25.9.0`), and is installed from source until monorepo npm packaging lands — see the [install-from-source note](#installation).
+:::
+
 ## Overview
 
 | Feature | Description |
@@ -40,8 +44,20 @@ Read more: [Tiered Bootstrap deep dive](https://blog.clawsouls.ai/en/posts/soulc
 
 ## Installation
 
+The `soulclaw` npm package currently serves the previous stable **2026.3.x** line:
+
 ```bash
 npm install -g soulclaw
+```
+
+For **2026.7.1**, install from source until monorepo npm packaging lands:
+
+```bash
+git clone -b migrate/v2026.7.1 https://github.com/clawsouls/soulclaw.git
+cd soulclaw
+pnpm install
+node scripts/build-all.mjs
+node openclaw.mjs --version
 ```
 
 ## Quick Start
